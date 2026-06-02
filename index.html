@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poolesville Esports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div id="admin-gate" class="topbar-admin-gate" aria-live="polite"></div>
+    <span class="topbar-brand">Poolesville Esports</span>
+  </header>
+
+  <div class="app">
+    <aside id="sidebar" class="sidebar" aria-label="Site navigation">
+      <button
+        id="sidebar-toggle"
+        class="sidebar-toggle"
+        type="button"
+        aria-expanded="true"
+        aria-controls="sidebar"
+        aria-label="Collapse sidebar"
+      >
+        <span class="sidebar-toggle-icon" aria-hidden="true">&rsaquo;</span>
+      </button>
+
+      <ul class="sidebar-nav">
+        <li>
+          <button type="button" class="is-active" data-page="home">
+            <span class="nav-icon" aria-hidden="true">◆</span>
+            <span class="nav-label">Home</span>
+          </button>
+        </li>
+        <li class="nav-group" id="nav-group-varsity">
+          <button type="button" data-page="varsity">
+            <span class="nav-icon" aria-hidden="true">◆</span>
+            <span class="nav-label">Varsity Team</span>
+          </button>
+          <ul class="sidebar-subnav" aria-label="Varsity Team sections">
+            <li>
+              <button type="button" data-varsity-tab="schedule" class="is-active">
+                <span class="nav-label">Schedule</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" data-varsity-tab="highlights">
+                <span class="nav-label">Game Highlights</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" data-varsity-tab="recruitment">
+                <span class="nav-label">Recruitment</span>
+              </button>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-group" id="nav-group-club">
+          <button type="button" data-page="club">
+            <span class="nav-icon" aria-hidden="true">◆</span>
+            <span class="nav-label">Club Info</span>
+          </button>
+          <ul class="sidebar-subnav" aria-label="Club Info sections">
+            <li>
+              <button type="button" data-club-tab="what-is-esports" class="is-active">
+                <span class="nav-label">What is Esports?</span>
+              </button>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <button type="button" data-page="events">
+            <span class="nav-icon" aria-hidden="true">◆</span>
+            <span class="nav-label">Events</span>
+          </button>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main">
+      <!-- Home -->
+      <div id="page-home" class="page is-active">
+        <section class="home-banner" aria-label="Welcome">
+          <div class="home-banner-box no-image">
+            <img
+              class="home-banner-img"
+              src="assets/hero-banner.jpg"
+              alt=""
+              onload="this.closest('.home-banner-box').classList.remove('no-image')"
+              onerror="this.closest('.home-banner-box').classList.add('no-image')"
+            />
+            <div class="home-banner-scrim" aria-hidden="true"></div>
+            <div class="home-banner-content">
+              <h1>PHS Esports</h1>
+              <p class="home-banner-lead placeholder-text">
+                Home page for Poolesville High School Esports Varsity Team and Club.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="home-section" aria-labelledby="upcoming-schedule">
+          <h2 id="upcoming-schedule">Varsity Esports — This Week</h2>
+          <div class="schedule-block">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Opponent</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="placeholder-row">
+                  <td>TBD</td>
+                  <td>TBD</td>
+                  <td>Upcoming match — details coming soon</td>
+                </tr>
+                <tr class="placeholder-row">
+                  <td>TBD</td>
+                  <td>TBD</td>
+                  <td>Upcoming match — details coming soon</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <a class="schedule-link" href="#" id="full-schedule-link" data-go-varsity="schedule">View full schedule →</a>
+        </section>
+      </div>
+
+      <!-- Varsity Team -->
+      <div id="page-varsity" class="page page-varsity">
+        <!-- Schedule -->
+        <div id="varsity-schedule" class="varsity-panel is-active">
+          <h1 class="varsity-page-title">2026 Spring Schedule</h1>
+          <div class="schedule-block varsity-schedule-table">
+            <table>
+              <thead>
+                <tr>
+                  <th class="col-week" scope="col"><span class="sr-only">Week</span></th>
+                  <th scope="col">Opponent</th>
+                  <th scope="col">Result</th>
+                  <th id="schedule-actions-header" class="col-actions" scope="col" hidden>
+                    <span class="sr-only">Delete row</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="schedule-tbody"></tbody>
+            </table>
+          </div>
+          <div class="schedule-admin-actions">
+            <button type="button" id="btn-edit-schedule" class="btn-admin admin-only" hidden>
+              Edit Schedule
+            </button>
+            <button type="button" id="btn-add-schedule-row" class="btn-admin btn-admin-outline" hidden>
+              Add row
+            </button>
+          </div>
+        </div>
+
+        <!-- Game Highlights -->
+        <div id="varsity-highlights" class="varsity-panel">
+          <div class="highlights-header">
+            <h1 class="varsity-page-title">Game Highlights</h1>
+            <button type="button" id="btn-add-clip" class="btn-admin admin-only" hidden>
+              Add clips
+            </button>
+          </div>
+
+          <div class="highlights-search-wrap">
+            <input
+              type="search"
+              id="highlights-search"
+              class="highlights-search"
+              placeholder="Search keywords…"
+              aria-label="Search highlights"
+              autocomplete="off"
+            />
+            <div class="filter-bubbles" id="filter-bubbles" aria-label="Filters"></div>
+          </div>
+
+          <div class="highlights-gallery" id="highlights-gallery" aria-live="polite"></div>
+          <p class="highlights-empty" id="highlights-empty" hidden>No highlights match your search.</p>
+        </div>
+
+        <!-- Recruitment -->
+        <div id="varsity-recruitment" class="varsity-panel">
+          <section id="qualifications-block" class="qualifications-block">
+            <h1 class="qualifications-title">Qualifications</h1>
+            <p class="qualifications-intro">
+              Varsity (5 players max): You must meet all the same qualifications as athletics:
+            </p>
+            <ul class="qualifications-list">
+              <li>No major discipline issues</li>
+              <li>Practices are mandatory to play (unless advance notice is given)</li>
+              <li>You cannot have an unexcused absence the day of a game</li>
+              <li>You must be ranked at least Platinum I by the end of Week 2 of competition (negotiable if making significant progress)</li>
+              <li>Jerseys required for Captain, Assistant Captain, and Anchor (optional for subs and JV)</li>
+            </ul>
+          </section>
+          <div class="recruitment-cta">
+            <a href="#" id="varsity-interest-link" class="btn-varsity-interest">
+              Interested in Joining Varsity?
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Club Info -->
+      <div id="page-club" class="page page-club">
+        <div id="club-what-is-esports" class="club-panel is-active">
+          <section class="home-section" aria-labelledby="what-is-esports">
+            <h1 class="club-page-title" id="what-is-esports">What is Esports?</h1>
+            <p class="placeholder-text" style="margin-bottom:1.25rem">
+              Poolesville High School Esports is part of a larger county-level Esports league called the Montgomery County Esports League (MCEL). The Montgomery County Esports League (MCEL) was founded in 2023 as a league of ten schools across the county that compete in a 7-week season that ends with a championship series to determine the league champion.
+            </p>
+
+            <div class="faq-list">
+              <details class="faq-item">
+                <summary>What is Esports and how is it different from casual gaming?</summary>
+                <p class="faq-answer placeholder-text">If you make the varsity Esports roster, it requires the same level of dedication and teamwork expected from players of a physical sport. If you make the junior varsity roster, you are working towards earning a varsity roster spot and supporting the program. Instead of physical acumen, the sport requires fine motor skills, mental toughness, creativity, communication, and collaboration.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Why Esports? What can I get out of it?</summary>
+                <p class="faq-answer placeholder-text">Over 200 colleges and universities belong to the National Association of Collegiate Esports, have a collegiate esports team, and give scholarships ranging from $500 to $10,000 (the average is $2,000). Professional esports teams compete for six-figure prize pools. For example, participants in the 2024 Rocket League Championship Series played for a share of a $1.16 million prize pool with the winner (Team BDS) walking away with a $300,000 grand prize.</p>
+              </details>
+              <details class="faq-item">
+                <summary>FAQ question 3</summary>
+                <p class="faq-answer placeholder-text">Answer template — fill in later.</p>
+              </details>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- Placeholder pages -->
+      <div id="page-events" class="page">
+        <p class="page-empty">Events — content coming soon.</p>
+      </div>
+    </main>
+  </div>
+
+  <div id="add-clip-modal" class="modal" hidden aria-hidden="true" role="dialog" aria-labelledby="add-clip-title">
+    <button type="button" class="modal-backdrop" aria-label="Close"></button>
+    <div class="add-clip-dialog-inner modal-panel">
+      <h2 id="add-clip-title" class="add-clip-dialog-title">Add clip</h2>
+      <div class="add-clip-grid">
+        <form id="add-clip-form" class="add-clip-form" onsubmit="return false">
+          <label class="login-field">
+            <span>URL</span>
+            <input type="url" id="clip-url" name="url" placeholder="https://youtube.com/watch?v=…" required />
+          </label>
+          <label class="login-field">
+            <span>Game #</span>
+            <input type="text" id="clip-game" name="game" placeholder="e.g. 1" required />
+          </label>
+          <label class="login-field">
+            <span>Player</span>
+            <input type="text" id="clip-player" name="player" placeholder="e.g. 12 or player name" required />
+          </label>
+          <label class="login-field">
+            <span>Opponent</span>
+            <input type="text" id="clip-opponent" name="opponent" placeholder="e.g. Blake" required />
+          </label>
+        </form>
+        <div class="add-clip-preview-wrap">
+          <p class="add-clip-preview-label">Preview</p>
+          <div id="add-clip-preview" class="add-clip-preview"></div>
+        </div>
+      </div>
+      <div class="add-clip-actions">
+        <button type="button" class="btn-login" id="btn-submit-clip">Add clip</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js" type="module"></script>
+</body>
+</html>

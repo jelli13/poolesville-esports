@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Sign In | Poolesville Esports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="login-page">
+  <header class="topbar">
+    <div id="admin-gate" class="topbar-admin-gate">
+      <a href="index.html" class="admin-gate-link">← Back to site</a>
+    </div>
+    <span class="topbar-brand">Poolesville Esports</span>
+  </header>
+
+  <main class="login-main">
+    <div id="login-lockout" class="login-card login-lockout" hidden>
+      <h1>Sign-in locked</h1>
+      <p>Too many incorrect attempts were made. Please try again later.</p>
+      <p class="login-lockout-timer">
+        Try again in <strong id="lockout-timer">5m 0s</strong>
+      </p>
+    </div>
+
+    <div id="login-form-wrap" class="login-card">
+      <h1>Administrator sign in</h1>
+      <p class="login-lead">Enter your credentials to access admin tools.</p>
+
+      <form id="login-form" class="login-form" novalidate>
+        <label class="login-field">
+          <span>Username or email</span>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            autocomplete="username"
+            required
+          />
+        </label>
+
+        <label class="login-field">
+          <span>Password</span>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            autocomplete="current-password"
+            required
+          />
+        </label>
+
+        <p id="login-error" class="login-error" hidden role="alert">
+          Wrong username or password
+        </p>
+
+        <button type="submit" class="btn-login">Sign in</button>
+      </form>
+    </div>
+  </main>
+
+  <dialog id="lockout-dialog" class="lockout-dialog" aria-labelledby="lockout-dialog-title">
+    <div class="lockout-dialog-box">
+      <h2 id="lockout-dialog-title">Sign-in locked</h2>
+      <p>Too many incorrect attempts made. Please try again later.</p>
+      <form method="dialog">
+        <button type="submit" class="btn-login">OK</button>
+      </form>
+    </div>
+  </dialog>
+
+  <script src="js/login.js" type="module"></script>
+</body>
+</html>
