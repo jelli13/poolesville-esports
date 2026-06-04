@@ -12,23 +12,57 @@ const mainNavButtons = document.querySelectorAll(
 );
 const varsityTabButtons = document.querySelectorAll("[data-varsity-tab]");
 const clubTabButtons = document.querySelectorAll("[data-club-tab]");
+const eventsTabButtons = document.querySelectorAll("[data-events-tab]");
 const pages = document.querySelectorAll(".page");
 const varsityPanels = document.querySelectorAll(".varsity-panel");
 const clubPanels = document.querySelectorAll(".club-panel");
+const eventsPanels = document.querySelectorAll(".event-panel");
 const navGroupVarsity = document.getElementById("nav-group-varsity");
 const navGroupClub = document.getElementById("nav-group-club");
+const navGroupEvents = document.getElementById("nav-group-events");
 
 let highlightsReady = false;
 let scheduleReady = false;
+let playersReady = false;
 
-sidebarToggle?.addEventListener("click", () => {
-  const collapsed = sidebar.classList.toggle("is-collapsed");
-  sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
-  sidebarToggle.setAttribute(
+const sidebarMobileFab = document.getElementById("sidebar-mobile-fab");
+const mobileNavQuery = window.matchMedia("(max-width: 640px)");
+
+function isMobileNav() {
+  return mobileNavQuery.matches;
+}
+
+function syncSidebarToggleState(collapsed) {
+  sidebarToggle?.setAttribute("aria-expanded", String(!collapsed));
+  sidebarToggle?.setAttribute(
     "aria-label",
     collapsed ? "Expand sidebar" : "Collapse sidebar"
   );
+  sidebarMobileFab?.setAttribute("aria-expanded", String(!collapsed));
+}
+
+function updateMobileSidebarFab() {
+  if (!sidebarMobileFab || !sidebar) return;
+  const showFab = isMobileNav() && sidebar.classList.contains("is-collapsed");
+  sidebarMobileFab.hidden = !showFab;
+}
+
+function setSidebarCollapsed(collapsed) {
+  sidebar.classList.toggle("is-collapsed", collapsed);
+  syncSidebarToggleState(collapsed);
+  updateMobileSidebarFab();
+}
+
+sidebarToggle?.addEventListener("click", () => {
+  setSidebarCollapsed(!sidebar.classList.contains("is-collapsed"));
 });
+
+sidebarMobileFab?.addEventListener("click", () => {
+  setSidebarCollapsed(false);
+});
+
+mobileNavQuery.addEventListener("change", updateMobileSidebarFab);
+updateMobileSidebarFab();
 
 async function showVarsityTab(tabId) {
   varsityPanels.forEach((panel) => {
@@ -52,6 +86,12 @@ async function showVarsityTab(tabId) {
     const { initHighlights } = await import("./highlights.js");
     initHighlights();
   }
+
+  if (tabId === "players" && !playersReady) {
+    playersReady = true;
+    const { initPlayers } = await import("./players.js");
+    initPlayers();
+  }
 }
 
 function showClubTab(tabId) {
@@ -64,8 +104,28 @@ function showClubTab(tabId) {
   });
 }
 
+function showEventsTab(tabId) {
+  eventsPanels.forEach((panel) => {
+    panel.classList.toggle("is-active", panel.id === `events-${tabId}`);
+  });
+
+  eventsTabButtons.forEach((btn) => {
+    btn.classList.toggle("is-active", btn.dataset.eventsTab === tabId);
+  });
+}
+
+function syncNavGroups(pageId) {
+  navGroupVarsity?.classList.toggle("is-expanded", pageId === "varsity");
+  navGroupClub?.classList.toggle("is-expanded", pageId === "club");
+  navGroupEvents?.classList.toggle("is-expanded", pageId === "events");
+}
+
 function showPage(pageId, options = {}) {
-  const { varsityTab = "schedule", clubTab = "what-is-esports" } = options;
+  const {
+    varsityTab = "schedule",
+    clubTab = "what-is-esports",
+    eventsTab = "nba-2k-tournament",
+  } = options;
 
   pages.forEach((page) => {
     page.classList.toggle("is-active", page.id === `page-${pageId}`);
@@ -75,11 +135,11 @@ function showPage(pageId, options = {}) {
     btn.classList.toggle("is-active", btn.dataset.page === pageId);
   });
 
-  navGroupVarsity?.classList.toggle("is-expanded", pageId === "varsity");
-  navGroupClub?.classList.toggle("is-expanded", pageId === "club");
+  syncNavGroups(pageId);
 
   if (pageId === "varsity") showVarsityTab(varsityTab);
   if (pageId === "club") showClubTab(clubTab);
+  if (pageId === "events") showEventsTab(eventsTab);
 
   syncAdminControls();
 }
@@ -90,6 +150,7 @@ mainNavButtons.forEach((btn) => {
     const options = {};
     if (pageId === "varsity") options.varsityTab = "schedule";
     if (pageId === "club") options.clubTab = "what-is-esports";
+    if (pageId === "events") options.eventsTab = "nba-2k-tournament";
     showPage(pageId, options);
   });
 });
@@ -103,6 +164,12 @@ varsityTabButtons.forEach((btn) => {
 clubTabButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     showPage("club", { clubTab: btn.dataset.clubTab });
+  });
+});
+
+eventsTabButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    showPage("events", { eventsTab: btn.dataset.eventsTab });
   });
 });
 

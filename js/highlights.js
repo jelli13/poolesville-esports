@@ -136,13 +136,13 @@ export async function deleteHighlight(id) {
   if (!isAdminLoggedIn()) return;
   await ensureHighlightsLoaded();
   highlightsData = highlightsData.filter((h) => h.id !== id);
-  saveHighlights(highlightsData);
+  await saveHighlights(highlightsData);
 }
 
 export async function addHighlight(clip) {
   await ensureHighlightsLoaded();
   highlightsData = [clip, ...highlightsData];
-  saveHighlights(highlightsData);
+  await saveHighlights(highlightsData);
 }
 
 function renderGallery(gallery, emptyEl, query) {

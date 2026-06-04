@@ -10,8 +10,8 @@
     href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="stylesheet" href="css/styles.css?v=4" />
+  <link rel="stylesheet" href="css/admin.css?v=4" />
 </head>
 <body>
   <header class="topbar">
@@ -56,8 +56,13 @@
               </button>
             </li>
             <li>
-              <button type="button" data-varsity-tab="recruitment">
-                <span class="nav-label">Recruitment</span>
+              <button type="button" data-varsity-tab="players">
+                <span class="nav-label">2026 Varsity Team</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" data-varsity-tab="qualifications">
+                <span class="nav-label">Qualifications</span>
               </button>
             </li>
           </ul>
@@ -75,14 +80,33 @@
             </li>
           </ul>
         </li>
-        <li>
+        <li class="nav-group" id="nav-group-events">
           <button type="button" data-page="events">
             <span class="nav-icon" aria-hidden="true">◆</span>
             <span class="nav-label">Events</span>
           </button>
+          <ul class="sidebar-subnav" aria-label="Events sections">
+            <li>
+              <button type="button" data-events-tab="nba-2k-tournament">
+                <span class="nav-label">NBA 2K Tournament</span>
+              </button>
+            </li>
+          </ul>
         </li>
       </ul>
     </aside>
+
+    <button
+      id="sidebar-mobile-fab"
+      class="sidebar-mobile-fab"
+      type="button"
+      hidden
+      aria-controls="sidebar"
+      aria-expanded="false"
+      aria-label="Open menu"
+    >
+      <span class="sidebar-mobile-fab-icon" aria-hidden="true">&rsaquo;</span>
+    </button>
 
     <main class="main">
       <!-- Home -->
@@ -132,6 +156,50 @@
             </table>
           </div>
           <a class="schedule-link" href="#" id="full-schedule-link" data-go-varsity="schedule">View full schedule →</a>
+        </section>
+
+        <section class="home-section home-interest" aria-labelledby="home-interest-heading">
+          <h2 id="home-interest-heading">Interested in Joining?</h2>
+          <div class="interest-form-embed">
+            <!-- Set src on this iframe when your form URL is ready -->
+            <iframe
+              id="interest-form-iframe"
+              class="interest-form-iframe"
+              title="Interest form"
+              src="about:blank"
+            ></iframe>
+          </div>
+          <p class="interest-form-note placeholder-text">
+            Form embed — set the iframe <code>src</code> in <code>index.html</code> when your form is ready.
+          </p>
+        </section>
+
+        <section class="home-section home-contact" aria-labelledby="home-contact-heading">
+          <h2 id="home-contact-heading">Contact Us</h2>
+          <div class="contact-links">
+            <a class="contact-link" href="#" id="contact-discord">
+              <span class="contact-icon" aria-hidden="true">
+                <svg class="contact-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.37-.76-.54-1.09A.09.09 0 0 0 8.99 4c-1.5.26-2.94.71-4.27 1.33A.08.08 0 0 0 4.55 6.6C2.56 9.78 2.04 12.86 2.25 15.89a.09.09 0 0 0 .04.06c1.89 1.39 3.72 2.23 5.5 2.8a.09.09 0 0 0 .1-.03c.42-.58.8-1.19 1.13-1.83a.09.09 0 0 0-.05-.12 10.63 10.63 0 0 1-1.52-.72.09.09 0 0 1-.01-.15c.13-.09.25-.2.37-.29a.09.09 0 0 1 .09 0c3.19 1.48 6.64 1.48 9.79 0a.09.09 0 0 1 .09 0c.12.1.24.2.37.29a.09.09 0 0 1-.01.15 10.47 10.47 0 0 1-1.53.73.09.09 0 0 0-.04.12c.34.64.72 1.25 1.13 1.83a.09.09 0 0 0 .1.03c1.79-.57 3.62-1.41 5.51-2.8a.09.09 0 0 0 .04-.06c.28-3.54-.58-6.59-2.21-9.56a.08.08 0 0 0-.04-.03zM8.04 13.86c-.97 0-1.77-.9-1.77-2s.79-2 1.77-2 1.78.9 1.77 2-.8 2-1.77 2zm7.92 0c-.97 0-1.77-.9-1.77-2s.79-2 1.77-2 1.78.9 1.77 2-.8 2-1.77 2z"
+                  />
+                </svg>
+              </span>
+              <span class="contact-label">PHS Esports Discord</span>
+            </a>
+            <a class="contact-link" href="#" id="contact-youtube">
+              <span class="contact-icon" aria-hidden="true">
+                <svg class="contact-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                  />
+                </svg>
+              </span>
+              <span class="contact-label">Falcon Esports Channel</span>
+            </a>
+          </div>
         </section>
       </div>
 
@@ -190,8 +258,23 @@
           <p class="highlights-empty" id="highlights-empty" hidden>No highlights match your search.</p>
         </div>
 
-        <!-- Recruitment -->
-        <div id="varsity-recruitment" class="varsity-panel">
+        <!-- 2026 Varsity Team -->
+        <div id="varsity-players" class="varsity-panel">
+          <div class="players-header">
+            <h1 class="varsity-page-title">2026 Varsity Team</h1>
+            <button type="button" id="btn-edit-players" class="btn-admin admin-only" hidden>
+              Edit players
+            </button>
+          </div>
+          <div
+            id="players-content"
+            class="players-content"
+            aria-label="Varsity player roster"
+          ></div>
+        </div>
+
+        <!-- Qualifications -->
+        <div id="varsity-qualifications" class="varsity-panel">
           <section id="qualifications-block" class="qualifications-block">
             <h1 class="qualifications-title">Qualifications</h1>
             <p class="qualifications-intro">
@@ -205,11 +288,6 @@
               <li>Jerseys required for Captain, Assistant Captain, and Anchor (optional for subs and JV)</li>
             </ul>
           </section>
-          <div class="recruitment-cta">
-            <a href="#" id="varsity-interest-link" class="btn-varsity-interest">
-              Interested in Joining Varsity?
-            </a>
-          </div>
         </div>
       </div>
 
@@ -240,9 +318,13 @@
         </div>
       </div>
 
-      <!-- Placeholder pages -->
-      <div id="page-events" class="page">
-        <p class="page-empty">Events — content coming soon.</p>
+      <!-- Events -->
+      <div id="page-events" class="page page-events">
+        <div id="events-nba-2k-tournament" class="event-panel">
+          <h1 class="event-page-title">NBA 2K Tournament</h1>
+          <p class="event-coming-soon">Coming Soon</p>
+          <p class="event-audience">Open to all PHS students</p>
+        </div>
       </div>
     </main>
   </div>
@@ -281,6 +363,7 @@
     </div>
   </div>
 
-  <script src="js/app.js" type="module"></script>
+  <script src="js/site-config.js"></script>
+  <script src="js/app.js?v=5" type="module"></script>
 </body>
 </html>

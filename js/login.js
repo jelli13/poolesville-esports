@@ -6,6 +6,7 @@ import {
   setAdminSession,
   validateCredentials,
 } from "./admin-auth.js";
+import { loginToContentApi } from "./data-store.js";
 
 const form = document.getElementById("login-form");
 const lockoutView = document.getElementById("login-lockout");
@@ -51,7 +52,7 @@ function init() {
   showFormView();
 }
 
-form?.addEventListener("submit", (e) => {
+form?.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (isLockedOut()) {
     showLockoutView();
@@ -63,7 +64,22 @@ form?.addEventListener("submit", (e) => {
 
   if (validateCredentials(username, password)) {
     if (errorEl) errorEl.hidden = true;
-    setAdminSession();
+
+    let apiToken = null;
+    try {
+      apiToken = await loginToContentApi(username, password);
+    } catch {
+      if (errorEl) {
+        errorEl.hidden = false;
+        errorEl.textContent =
+          "Logged in locally, but the save API is unavailable. Run npm start so edits apply for everyone.";
+      }
+      setAdminSession(null);
+      window.location.replace("index.html");
+      return;
+    }
+
+    setAdminSession(apiToken);
     window.location.replace("index.html");
     return;
   }

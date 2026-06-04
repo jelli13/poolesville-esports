@@ -10,10 +10,13 @@ const STORAGE_KEYS = {
   LOGIN_HANDOFF: "phs_esports_admin_handoff",
   /** @deprecated cleared on init — sessions no longer persist across reload */
   SESSION: "phs_esports_admin_session",
+  API_TOKEN: "phs_esports_api_token",
 };
 
 /** Admin state lives in memory only; cleared on every full page reload. */
 let adminActive = false;
+/** Bearer token for POST /api/schedule and /api/highlights (shared site data). */
+let adminApiToken = null;
 
 const MAX_ATTEMPTS = 3;
 const LOCKOUT_MS = 5 * 60 * 1000;
@@ -105,15 +108,30 @@ export function initAdminAuth() {
   const handoff = sessionStorage.getItem(STORAGE_KEYS.LOGIN_HANDOFF);
   if (handoff === "1") {
     sessionStorage.removeItem(STORAGE_KEYS.LOGIN_HANDOFF);
+    adminApiToken = sessionStorage.getItem(STORAGE_KEYS.API_TOKEN);
     adminActive = true;
   }
 }
 
 /** Set after successful login; consumed on the next page load only. */
-export function setAdminSession() {
+export function setAdminSession(apiToken = null) {
   clearFailedAttempts();
   adminActive = false;
+  adminApiToken = apiToken;
   sessionStorage.setItem(STORAGE_KEYS.LOGIN_HANDOFF, "1");
+  if (apiToken) {
+    sessionStorage.setItem(STORAGE_KEYS.API_TOKEN, apiToken);
+  } else {
+    sessionStorage.removeItem(STORAGE_KEYS.API_TOKEN);
+  }
+}
+
+export function setAdminApiToken(token) {
+  adminApiToken = token;
+}
+
+export function getAdminApiToken() {
+  return adminApiToken;
 }
 
 export function isAdminLoggedIn() {
@@ -122,7 +140,9 @@ export function isAdminLoggedIn() {
 
 export function clearAdminSession() {
   adminActive = false;
+  adminApiToken = null;
   sessionStorage.removeItem(STORAGE_KEYS.LOGIN_HANDOFF);
+  sessionStorage.removeItem(STORAGE_KEYS.API_TOKEN);
   sessionStorage.removeItem(STORAGE_KEYS.SESSION);
 }
 

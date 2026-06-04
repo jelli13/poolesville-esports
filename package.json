@@ -1,0 +1,12 @@
+{
+  "name": "poolesville-esports",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

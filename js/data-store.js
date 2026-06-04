@@ -1,7 +1,18 @@
+import { getAdminApiToken } from "./admin-auth.js";
+
 const KEYS = {
-  HIGHLIGHTS: "phs_esports_highlights",
-  SCHEDULE: "phs_esports_schedule",
+  PLAYERS: "phs_esports_players",
 };
+
+function apiBase() {
+  const base = window.PHS_SITE_CONFIG?.apiBase ?? "";
+  return String(base).replace(/\/$/, "");
+}
+
+function apiUrl(path) {
+  const base = apiBase();
+  return base ? `${base}${path}` : path;
+}
 
 function normalizeHighlight(item) {
   return {
@@ -10,27 +21,81 @@ function normalizeHighlight(item) {
   };
 }
 
-export async function loadHighlights() {
-  const saved = localStorage.getItem(KEYS.HIGHLIGHTS);
-  if (saved) {
-    try {
-      return JSON.parse(saved).map(normalizeHighlight);
-    } catch {
-      /* fall through */
-    }
+async function fetchPublicJson(apiPath, fallbackPath) {
+  const cacheBust = `?_=${Date.now()}`;
+  try {
+    const res = await fetch(`${apiUrl(apiPath)}${cacheBust}`, { cache: "no-store" });
+    if (res.ok) return res.json();
+  } catch {
+    /* try fallback */
   }
-  const res = await fetch("data/highlights.json");
-  if (!res.ok) throw new Error("Could not load highlights");
-  const data = await res.json();
+
+  if (fallbackPath) {
+    const res = await fetch(`${fallbackPath}${cacheBust}`, { cache: "no-store" });
+    if (res.ok) return res.json();
+  }
+
+  throw new Error(`Could not load ${apiPath}`);
+}
+
+async function postAdminJson(apiPath, data) {
+  const token = getAdminApiToken();
+  if (!token) {
+    throw new Error(
+      "Server login required. Sign in again with npm start (or your deployed API) running."
+    );
+  }
+
+  const res = await fetch(apiUrl(apiPath), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ data }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Save failed. Is the site API running?");
+  }
+}
+
+export async function loginToContentApi(username, password) {
+  const res = await fetch(apiUrl("/api/login"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password }),
+  });
+
+  if (!res.ok) {
+    throw new Error("API login failed");
+  }
+
+  const payload = await res.json();
+  if (!payload?.token) throw new Error("API login failed");
+  return payload.token;
+}
+
+export async function loadHighlights() {
+  const data = await fetchPublicJson("/api/highlights", "data/highlights.json");
   return data.map(normalizeHighlight);
 }
 
-export function saveHighlights(items) {
-  localStorage.setItem(KEYS.HIGHLIGHTS, JSON.stringify(items.map(normalizeHighlight)));
+export async function saveHighlights(items) {
+  await postAdminJson("/api/highlights", items.map(normalizeHighlight));
 }
 
 export async function loadSchedule() {
-  const saved = localStorage.getItem(KEYS.SCHEDULE);
+  return fetchPublicJson("/api/schedule", "data/schedule.json");
+}
+
+export async function saveSchedule(rows) {
+  await postAdminJson("/api/schedule", rows);
+}
+
+export async function loadPlayers() {
+  const saved = localStorage.getItem(KEYS.PLAYERS);
   if (saved) {
     try {
       return JSON.parse(saved);
@@ -38,11 +103,11 @@ export async function loadSchedule() {
       /* fall through */
     }
   }
-  const res = await fetch("data/schedule.json");
-  if (!res.ok) throw new Error("Could not load schedule");
+  const res = await fetch("data/players.json");
+  if (!res.ok) throw new Error("Could not load players");
   return res.json();
 }
 
-export function saveSchedule(rows) {
-  localStorage.setItem(KEYS.SCHEDULE, JSON.stringify(rows));
+export function savePlayers(data) {
+  localStorage.setItem(KEYS.PLAYERS, JSON.stringify(data));
 }

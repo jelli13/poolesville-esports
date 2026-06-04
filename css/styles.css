@@ -176,7 +176,8 @@ body {
 
 /* Varsity subnav */
 .nav-group.is-expanded > button[data-page="varsity"],
-.nav-group.is-expanded > button[data-page="club"] {
+.nav-group.is-expanded > button[data-page="club"],
+.nav-group.is-expanded > button[data-page="events"] {
   color: var(--gold-bright);
 }
 
@@ -222,6 +223,11 @@ body {
   display: none !important;
 }
 
+/* Mobile-only floating control when sidebar is fully hidden */
+.sidebar-mobile-fab {
+  display: none;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -252,7 +258,7 @@ body {
 }
 
 #page-varsity.page-varsity {
-  max-width: calc(100vw - var(--sidebar-width) - 2rem);
+  max-width: none;
   width: 100%;
   margin: 0;
   padding: 2.5rem 2rem 4rem;
@@ -263,19 +269,22 @@ body {
 }
 
 .page-varsity,
-.page-club {
+.page-club,
+.page-events {
   max-width: none;
   width: 100%;
 }
 
-/* —— Varsity / Club panels —— */
+/* —— Varsity / Club / Events panels —— */
 .varsity-panel,
-.club-panel {
+.club-panel,
+.event-panel {
   display: none;
 }
 
 .varsity-panel.is-active,
-.club-panel.is-active {
+.club-panel.is-active,
+.event-panel.is-active {
   display: block;
 }
 
@@ -498,45 +507,38 @@ body {
   margin-top: 2rem;
 }
 
-/* —— Recruitment —— */
-#varsity-recruitment {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+/* —— Qualifications —— */
 #qualifications-block.qualifications-block {
-  text-align: left;
   width: 100%;
-  max-width: 56rem;
-  min-width: min(100%, 52rem);
-  margin: 2rem auto 3rem;
-  padding: 2.5rem 3rem;
+  margin: 0;
+  padding: 2.75rem 2rem 3rem;
   background: var(--black-elevated);
   border: 1px solid var(--border);
   border-radius: 8px;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 .qualifications-title {
   font-family: var(--font-brand);
-  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-size: clamp(1.35rem, 4vw, 2rem);
   font-weight: 700;
   color: var(--gold);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  margin-bottom: 1.25rem;
+  margin: 0 0 1.25rem;
+  width: 100%;
   text-align: center;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
 #qualifications-block .qualifications-intro {
   font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.5;
-  white-space: nowrap;
-  width: max-content;
-  max-width: 100%;
-  margin: 0 auto 1.25rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+  text-align: center;
 }
 
 .qualifications-list {
@@ -544,9 +546,10 @@ body {
   font-size: 1.05rem;
   line-height: 1.7;
   padding-left: 1.25rem;
-  margin: 0 auto;
-  max-width: 52rem;
-  width: fit-content;
+  margin: 0;
+  max-width: 42rem;
+  margin-inline: auto;
+  text-align: left;
 }
 
 .qualifications-list li {
@@ -557,46 +560,44 @@ body {
   margin-bottom: 0;
 }
 
-.recruitment-cta {
-  text-align: center;
-  max-width: 56rem;
-  margin: 0 auto 4rem;
-  padding: 0 2rem;
-}
-
-.btn-varsity-interest {
-  display: inline-block;
-  padding: 0.9rem 1.75rem;
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--black);
-  background: var(--gold);
-  border: 2px solid var(--gold);
-  border-radius: 8px;
-  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-}
-
-.btn-varsity-interest:hover {
-  color: var(--gold-bright);
-  background: var(--black);
-  border-color: var(--gold);
-  text-decoration: none;
-}
-
-.btn-varsity-interest:focus-visible {
-  outline: 2px solid var(--gold-bright);
-  outline-offset: 3px;
-}
-
 .page-empty {
   font-family: var(--font-body);
   color: var(--text-muted);
   font-size: 1rem;
   padding-top: 2rem;
+}
+
+/* —— Events —— */
+.event-page-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.event-coming-soon {
+  font-family: var(--font-brand);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  text-align: center;
+  margin: 2rem 0 1rem;
+}
+
+.event-audience {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  color: var(--text);
+  text-align: center;
+  margin: 0;
 }
 
 .home-section > p:not(.faq-answer) {
@@ -840,6 +841,144 @@ body {
   text-decoration: underline;
 }
 
+/* Home interest form embed */
+.home-interest {
+  margin-top: 2rem;
+}
+
+.interest-form-embed {
+  margin-top: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.25);
+  min-height: 28rem;
+}
+
+.interest-form-iframe {
+  display: block;
+  width: 100%;
+  min-height: 28rem;
+  border: 0;
+  background: transparent;
+}
+
+.interest-form-note {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.interest-form-note code {
+  font-size: 0.9em;
+  color: var(--gold);
+}
+
+/* Home contact links */
+.home-contact {
+  margin-top: 2rem;
+}
+
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--black-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.home-contact .contact-link,
+.home-contact .contact-link:visited {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  color: #fff;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.125rem;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.home-contact .contact-link:hover,
+.home-contact .contact-link:hover:visited {
+  color: var(--gold-bright);
+}
+
+.home-contact .contact-link:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Emoji-sized icons inline with link text (~18px) */
+.home-contact .contact-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  min-width: 1.125rem;
+  min-height: 1.125rem;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.home-contact .contact-link:hover .contact-icon {
+  color: var(--gold-bright);
+}
+
+.home-contact .contact-icon svg,
+.home-contact .contact-icon-svg {
+  display: block;
+  width: 1.125rem !important;
+  height: 1.125rem !important;
+  max-width: 1.125rem;
+  max-height: 1.125rem;
+  flex-shrink: 0;
+}
+
+.home-contact .contact-label {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.125rem;
+  color: inherit;
+}
+
+/* Varsity players roster */
+.players-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.players-content {
+  white-space: pre-wrap;
+  line-height: 1.65;
+  font-size: 1.05rem;
+  color: var(--text);
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.players-content.players-editing {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
 @media (max-width: 640px) {
   .sidebar {
     position: fixed;
@@ -860,5 +999,49 @@ body {
 
   .sidebar:not(.is-collapsed) + .main {
     margin-left: 0;
+  }
+
+  .sidebar-mobile-fab {
+    display: grid;
+    position: fixed;
+    left: 0.5rem;
+    top: calc(var(--topbar-height) + 0.5rem);
+    z-index: 60;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 0 6px 6px 0;
+    background: var(--black-soft);
+    color: var(--gold);
+    cursor: pointer;
+    place-items: center;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.45);
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .sidebar-mobile-fab[hidden] {
+    display: none !important;
+  }
+
+  .sidebar-mobile-fab:hover {
+    color: var(--gold-bright);
+    background: rgba(201, 162, 39, 0.12);
+  }
+
+  .sidebar-mobile-fab:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  .sidebar-mobile-fab-icon {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  #qualifications-block.qualifications-block {
+    padding: 1.75rem 1.25rem;
   }
 }

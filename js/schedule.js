@@ -101,7 +101,7 @@ function wireEditButton() {
   btn.replaceWith(btn.cloneNode(true));
   const fresh = document.getElementById("btn-edit-schedule");
 
-  fresh?.addEventListener("click", () => {
+  fresh?.addEventListener("click", async () => {
     if (!isAdminLoggedIn()) return;
 
     if (!editMode) {
@@ -112,7 +112,13 @@ function wireEditButton() {
     }
 
     scheduleRows = readTableIntoRows();
-    saveSchedule(scheduleRows);
+    try {
+      await saveSchedule(scheduleRows);
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Could not save schedule for all visitors.");
+      return;
+    }
     editMode = false;
     fresh.textContent = "Edit Schedule";
     renderScheduleTable();
