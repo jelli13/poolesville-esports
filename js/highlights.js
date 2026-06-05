@@ -6,10 +6,14 @@ let highlightsData = [];
 let dataLoaded = false;
 
 const activeFilters = {
-  playerNumber: null,
-  gameNumber: null,
+  player: null,
   opponent: null,
 };
+
+const FILTER_SELECTS = [
+  { key: "player", selectId: "filter-player" },
+  { key: "opponent", selectId: "filter-opponent" },
+];
 
 function escapeHtml(str) {
   return String(str)
@@ -26,35 +30,72 @@ async function ensureHighlightsLoaded() {
   }
 }
 
+function getGalleryElements() {
+  return {
+    gallery: document.getElementById("highlights-gallery"),
+    searchInput: document.getElementById("highlights-search"),
+    emptyEl: document.getElementById("highlights-empty"),
+  };
+}
+
+function applyGalleryFilters() {
+  const { gallery, searchInput, emptyEl } = getGalleryElements();
+  renderGallery(gallery, emptyEl, searchInput?.value ?? "");
+}
+
 export function clearHighlightFilters() {
-  activeFilters.playerNumber = null;
-  activeFilters.gameNumber = null;
+  activeFilters.player = null;
   activeFilters.opponent = null;
-  document.querySelectorAll(".filter-bubble.is-active").forEach((b) => {
-    b.classList.remove("is-active");
+
+  FILTER_SELECTS.forEach(({ selectId }) => {
+    const select = document.getElementById(selectId);
+    if (select) select.value = "";
   });
 }
 
 export async function reloadHighlights() {
   await ensureHighlightsLoaded();
   highlightsData = await loadHighlights();
+  applyGalleryFilters();
+}
 
-  const gallery = document.getElementById("highlights-gallery");
-  const bubblesEl = document.getElementById("filter-bubbles");
+function setFilterPanelOpen(open) {
+  const panel = document.getElementById("highlights-filter-panel");
   const searchInput = document.getElementById("highlights-search");
-  const emptyEl = document.getElementById("highlights-empty");
+  if (!panel || !searchInput) return;
 
-  if (bubblesEl) renderFilterBubbles(bubblesEl);
-  if (gallery) renderGallery(gallery, emptyEl, searchInput?.value ?? "");
+  panel.hidden = !open;
+  searchInput.setAttribute("aria-expanded", String(open));
+}
+
+function wireFilterPanel() {
+  const wrap = document.getElementById("highlights-search-wrap");
+  const searchInput = document.getElementById("highlights-search");
+  const panel = document.getElementById("highlights-filter-panel");
+  if (!wrap || !searchInput || !panel) return;
+
+  searchInput.addEventListener("focus", () => setFilterPanelOpen(true));
+  searchInput.addEventListener("click", () => setFilterPanelOpen(true));
+
+  document.addEventListener("click", (e) => {
+    if (!wrap.contains(e.target)) {
+      setFilterPanelOpen(false);
+    }
+  });
+
+  FILTER_SELECTS.forEach(({ key, selectId }) => {
+    const select = document.getElementById(selectId);
+    select?.addEventListener("change", () => {
+      activeFilters[key] = select.value || null;
+      applyGalleryFilters();
+    });
+  });
 }
 
 export async function initHighlights() {
-  const gallery = document.getElementById("highlights-gallery");
-  const bubblesEl = document.getElementById("filter-bubbles");
-  const searchInput = document.getElementById("highlights-search");
-  const emptyEl = document.getElementById("highlights-empty");
+  const { gallery, searchInput, emptyEl } = getGalleryElements();
 
-  if (!gallery || !bubblesEl) return;
+  if (!gallery) return;
 
   try {
     highlightsData = await loadHighlights();
@@ -65,64 +106,20 @@ export async function initHighlights() {
     return;
   }
 
-  renderFilterBubbles(bubblesEl);
+  wireFilterPanel();
   renderGallery(gallery, emptyEl, searchInput?.value ?? "");
 
-  searchInput?.addEventListener("input", () => {
-    renderGallery(gallery, emptyEl, searchInput.value);
-  });
+  searchInput?.addEventListener("input", applyGalleryFilters);
 
   syncAdminControls();
 }
 
-function renderFilterBubbles(container) {
-  const groups = [
-    { key: "playerNumber", label: "Player", prefix: "Player #" },
-    { key: "gameNumber", label: "Game", prefix: "Game " },
-    { key: "opponent", label: "Opponent", prefix: "" },
-  ];
-
-  container.innerHTML = groups
-    .map((group) => {
-      const values = [...new Set(highlightsData.map((h) => h[group.key]).filter(Boolean))].sort();
-      if (!values.length) return "";
-
-      const chips = values
-        .map((val) => {
-          const display = group.prefix ? `${group.prefix}${val}` : val;
-          return `<button type="button" class="filter-bubble" data-filter-key="${group.key}" data-filter-value="${escapeHtml(val)}">${escapeHtml(display)}</button>`;
-        })
-        .join("");
-
-      return `<div class="filter-group"><span class="filter-group-label">${group.label}</span>${chips}</div>`;
-    })
-    .join("");
-
-  container.querySelectorAll(".filter-bubble").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const key = btn.dataset.filterKey;
-      const value = btn.dataset.filterValue;
-
-      if (activeFilters[key] === value) {
-        activeFilters[key] = null;
-        btn.classList.remove("is-active");
-      } else {
-        container.querySelectorAll(`[data-filter-key="${key}"]`).forEach((b) => b.classList.remove("is-active"));
-        activeFilters[key] = value;
-        btn.classList.add("is-active");
-      }
-
-      const searchInput = document.getElementById("highlights-search");
-      const gallery = document.getElementById("highlights-gallery");
-      const emptyEl = document.getElementById("highlights-empty");
-      renderGallery(gallery, emptyEl, searchInput?.value ?? "");
-    });
-  });
-}
-
 function matchesFilters(item, query) {
-  if (activeFilters.playerNumber && item.playerNumber !== activeFilters.playerNumber) return false;
-  if (activeFilters.gameNumber && item.gameNumber !== activeFilters.gameNumber) return false;
+  if (activeFilters.player) {
+    const playerHay = `${item.title} ${item.keywords}`.toLowerCase();
+    if (!playerHay.includes(activeFilters.player.toLowerCase())) return false;
+  }
+
   if (activeFilters.opponent && item.opponent !== activeFilters.opponent) return false;
 
   const q = query.toLowerCase().trim();

@@ -10,7 +10,7 @@
     href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="css/styles.css?v=4" />
+  <link rel="stylesheet" href="css/styles.css?v=5" />
   <link rel="stylesheet" href="css/admin.css?v=4" />
 </head>
 <body>
@@ -242,16 +242,43 @@
             </button>
           </div>
 
-          <div class="highlights-search-wrap">
+          <div class="highlights-search-wrap" id="highlights-search-wrap">
             <input
               type="search"
               id="highlights-search"
               class="highlights-search"
               placeholder="Search keywords…"
-              aria-label="Search highlights"
+              aria-label="Search keywords"
+              aria-controls="highlights-filter-panel"
+              aria-expanded="false"
               autocomplete="off"
             />
-            <div class="filter-bubbles" id="filter-bubbles" aria-label="Filters"></div>
+            <div
+              id="highlights-filter-panel"
+              class="highlights-filter-panel"
+              hidden
+              aria-label="Highlight filters"
+            >
+              <label class="highlights-filter-field">
+                <span class="highlights-filter-label">Player</span>
+                <select id="filter-player" class="highlights-filter-select">
+                  <option value="">All Players</option>
+                  <option value="Shatterlol">Shatterlol</option>
+                  <option value="BlaKKat">BlaKKat</option>
+                  <option value="AcidSquirrel">AcidSquirrel</option>
+                  <option value="DynamiteHanSolo1">DynamiteHanSolo1</option>
+                </select>
+              </label>
+              <label class="highlights-filter-field">
+                <span class="highlights-filter-label">Opponent</span>
+                <select id="filter-opponent" class="highlights-filter-select">
+                  <option value="">All Opponents</option>
+                  <option value="Blake">Blake</option>
+                  <option value="Clarksburg">Clarksburg</option>
+                  <option value="Northwood">Northwood</option>
+                </select>
+              </label>
+            </div>
           </div>
 
           <div class="highlights-gallery" id="highlights-gallery" aria-live="polite"></div>
