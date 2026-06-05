@@ -5,13 +5,18 @@ import { syncAdminControls } from "./admin-controls.js";
 let highlightsData = [];
 let dataLoaded = false;
 
+const DEFAULT_PLAYERS = ["Shatterlol", "BlaKKat", "AcidSquirrel", "DynamiteHanSolo1"];
+const DEFAULT_OPPONENTS = ["Blake", "Clarksburg", "Northwood"];
+
 const activeFilters = {
   player: null,
   opponent: null,
+  week: null,
 };
 
 const FILTER_SELECTS = [
   { key: "player", selectId: "filter-player" },
+  { key: "week", selectId: "filter-week" },
   { key: "opponent", selectId: "filter-opponent" },
 ];
 
@@ -21,6 +26,54 @@ function escapeHtml(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function compareFilterValues(a, b) {
+  return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: "base" });
+}
+
+function mergeFilterOptions(defaults, fromData) {
+  return [...new Set([...defaults, ...fromData.map(String).filter(Boolean)])].sort(compareFilterValues);
+}
+
+function isNumericPlayerValue(value) {
+  return /^\d+$/.test(String(value ?? "").trim());
+}
+
+function getPlayerName(item) {
+  const stored = String(item.playerNumber ?? "").trim();
+  if (stored && !isNumericPlayerValue(stored)) return stored;
+
+  const hay = `${item.title} ${item.keywords}`.toLowerCase();
+  for (const name of DEFAULT_PLAYERS) {
+    if (hay.includes(name.toLowerCase())) return name;
+  }
+
+  const titleMatch = item.title?.match(/[—–-]\s*([A-Za-z][A-Za-z0-9]*)/);
+  if (titleMatch) {
+    const candidate = titleMatch[1];
+    if (!/^(full|game|semifinals|finals)$/i.test(candidate)) return candidate;
+  }
+
+  return null;
+}
+
+function getWeekNumber(item) {
+  const fromTitle = item.title?.match(/Week\s+(\d+)/i);
+  if (fromTitle) return fromTitle[1];
+  return item.gameNumber ? String(item.gameNumber) : null;
+}
+
+function formatHighlightMeta(item) {
+  const parts = [];
+  const player = getPlayerName(item);
+  const week = getWeekNumber(item);
+
+  if (player) parts.push(escapeHtml(player));
+  if (week) parts.push(`Week ${escapeHtml(week)}`);
+  if (item.opponent) parts.push(`vs ${escapeHtml(item.opponent)}`);
+
+  return parts.join(" · ");
 }
 
 async function ensureHighlightsLoaded() {
@@ -43,9 +96,64 @@ function applyGalleryFilters() {
   renderGallery(gallery, emptyEl, searchInput?.value ?? "");
 }
 
+function populateFilterDropdowns() {
+  const groups = [
+    {
+      key: "player",
+      selectId: "filter-player",
+      allLabel: "All Players",
+      values: mergeFilterOptions(
+        DEFAULT_PLAYERS,
+        highlightsData.map((h) => getPlayerName(h)).filter(Boolean)
+      ).filter((value) => !isNumericPlayerValue(value)),
+      formatLabel: (value) => value,
+    },
+    {
+      key: "week",
+      selectId: "filter-week",
+      allLabel: "All Weeks",
+      values: mergeFilterOptions([], highlightsData.map((h) => getWeekNumber(h)).filter(Boolean)),
+      formatLabel: (value) => `Week ${value}`,
+    },
+    {
+      key: "opponent",
+      selectId: "filter-opponent",
+      allLabel: "All Opponents",
+      values: mergeFilterOptions(
+        DEFAULT_OPPONENTS,
+        highlightsData.map((h) => h.opponent)
+      ),
+      formatLabel: (value) => value,
+    },
+  ];
+
+  groups.forEach(({ key, selectId, allLabel, values, formatLabel }) => {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    const current = activeFilters[key] ?? "";
+
+    select.innerHTML = `<option value="">${escapeHtml(allLabel)}</option>`;
+    values.forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = formatLabel(value);
+      select.appendChild(option);
+    });
+
+    if (current && values.includes(current)) {
+      select.value = current;
+    } else {
+      select.value = "";
+      activeFilters[key] = null;
+    }
+  });
+}
+
 export function clearHighlightFilters() {
   activeFilters.player = null;
   activeFilters.opponent = null;
+  activeFilters.week = null;
 
   FILTER_SELECTS.forEach(({ selectId }) => {
     const select = document.getElementById(selectId);
@@ -56,6 +164,7 @@ export function clearHighlightFilters() {
 export async function reloadHighlights() {
   await ensureHighlightsLoaded();
   highlightsData = await loadHighlights();
+  populateFilterDropdowns();
   applyGalleryFilters();
 }
 
@@ -107,6 +216,7 @@ export async function initHighlights() {
   }
 
   wireFilterPanel();
+  populateFilterDropdowns();
   renderGallery(gallery, emptyEl, searchInput?.value ?? "");
 
   searchInput?.addEventListener("input", applyGalleryFilters);
@@ -114,18 +224,26 @@ export async function initHighlights() {
   syncAdminControls();
 }
 
-function matchesFilters(item, query) {
-  if (activeFilters.player) {
-    const playerHay = `${item.title} ${item.keywords}`.toLowerCase();
-    if (!playerHay.includes(activeFilters.player.toLowerCase())) return false;
-  }
+function matchesPlayerFilter(item, player) {
+  const needle = player.toLowerCase();
+  const playerName = getPlayerName(item);
+  if (playerName && playerName.toLowerCase() === needle) return true;
 
+  const hay = `${item.title} ${item.keywords}`.toLowerCase();
+  return hay.includes(needle);
+}
+
+function matchesFilters(item, query) {
+  if (activeFilters.player && !matchesPlayerFilter(item, activeFilters.player)) return false;
+  if (activeFilters.week && getWeekNumber(item) !== activeFilters.week) return false;
   if (activeFilters.opponent && item.opponent !== activeFilters.opponent) return false;
 
   const q = query.toLowerCase().trim();
   if (!q) return true;
 
-  const hay = `${item.title} ${item.keywords} ${item.playerNumber} ${item.gameNumber} ${item.opponent}`.toLowerCase();
+  const player = getPlayerName(item) ?? "";
+  const week = getWeekNumber(item) ?? "";
+  const hay = `${item.title} ${item.keywords} ${player} ${week} ${item.opponent} week`.toLowerCase();
   return hay.includes(q);
 }
 
@@ -158,15 +276,13 @@ function renderGallery(gallery, emptyEl, query) {
         ? `<button type="button" class="highlight-delete" data-delete-id="${escapeHtml(item.id)}" aria-label="Delete clip">🗑</button>`
         : "";
 
-      const opponentLine = item.opponent ? ` · vs ${escapeHtml(item.opponent)}` : "";
-
       return `
         <article class="highlight-card" data-id="${escapeHtml(item.id)}">
           ${deleteBtn}
           ${media}
           <div class="highlight-card-body">
             <h3>${escapeHtml(item.title)}</h3>
-            <p class="highlight-meta">Player #${escapeHtml(item.playerNumber)} · Game ${escapeHtml(item.gameNumber)}${opponentLine}</p>
+            <p class="highlight-meta">${formatHighlightMeta(item)}</p>
           </div>
         </article>`;
     })
@@ -183,3 +299,5 @@ function renderGallery(gallery, emptyEl, query) {
 
   if (emptyEl) emptyEl.hidden = filtered.length > 0;
 }
+
+export { formatHighlightMeta };

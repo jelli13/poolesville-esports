@@ -28,14 +28,18 @@ function renderClipPreview({ title, embedUrl, playerNumber, gameNumber, opponent
     ? `<div class="highlight-embed"><iframe src="${escapeHtml(embedUrl)}" title="${escapeHtml(displayTitle)}" allowfullscreen></iframe></div>`
     : `<div class="highlight-embed highlight-embed--placeholder"><span>Enter a valid YouTube URL</span></div>`;
 
-  const opponentLine = opponent ? ` · vs ${escapeHtml(opponent)}` : "";
+  const metaParts = [];
+  if (playerNumber) metaParts.push(escapeHtml(playerNumber));
+  if (gameNumber) metaParts.push(`Week ${escapeHtml(gameNumber)}`);
+  if (opponent) metaParts.push(`vs ${escapeHtml(opponent)}`);
+  const metaLine = metaParts.length ? metaParts.join(" · ") : "—";
 
   preview.innerHTML = `
     <article class="highlight-card highlight-card--preview">
       ${media}
       <div class="highlight-card-body">
         <h3>${escapeHtml(displayTitle)}</h3>
-        <p class="highlight-meta">Player #${escapeHtml(playerNumber || "—")} · Game ${escapeHtml(gameNumber || "—")}${opponentLine}</p>
+        <p class="highlight-meta">${metaLine}</p>
       </div>
     </article>`;
 }
@@ -118,7 +122,12 @@ function wireAddClipDialog() {
     const embedUrl = toEmbedUrl(url);
 
     if (!embedUrl || !gameNumber || !playerNumber || !opponent) {
-      alert("Please enter URL, Game #, Player, and Opponent.");
+      alert("Please enter URL, Week #, Player, and Opponent.");
+      return;
+    }
+
+    if (/^\d+$/.test(playerNumber)) {
+      alert("Player must be a name, not a number.");
       return;
     }
 

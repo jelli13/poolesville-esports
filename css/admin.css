@@ -248,7 +248,7 @@
 }
 
 .schedule-editing .col-week {
-  min-width: 10rem;
+  min-width: 0;
 }
 
 .col-actions {

@@ -1055,4 +1055,163 @@ body {
   #qualifications-block.qualifications-block {
     padding: 1.75rem 1.25rem;
   }
+
+  #page-varsity.page-varsity,
+  .page {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  #page-varsity.page-varsity {
+    padding-top: 1.5rem;
+  }
+
+  .varsity-schedule-table {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .varsity-schedule-table.schedule-block {
+    overflow: hidden;
+  }
+
+  .varsity-schedule-table table {
+    display: block;
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  .varsity-schedule-table thead {
+    display: none;
+  }
+
+  .varsity-schedule-table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .varsity-schedule-table tbody tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "week week"
+      "opponent result";
+    gap: 0.35rem 1rem;
+    padding: 0.85rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .varsity-schedule-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .varsity-schedule-table td {
+    display: block;
+    padding: 0;
+    border: none;
+    width: auto !important;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    vertical-align: top;
+  }
+
+  .varsity-schedule-table td.col-week {
+    grid-area: week;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--text);
+    white-space: normal;
+  }
+
+  .varsity-schedule-table td:nth-child(2) {
+    grid-area: opponent;
+    font-size: 0.88rem;
+  }
+
+  .varsity-schedule-table td:nth-child(2)::before {
+    content: "Opponent";
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.15rem;
+  }
+
+  .varsity-schedule-table td.col-result {
+    grid-area: result;
+    text-align: right !important;
+    align-self: end;
+  }
+
+  .varsity-schedule-table td.col-result::before {
+    content: "Result";
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.15rem;
+    text-align: right;
+  }
+
+  .varsity-schedule-table.schedule-editing tbody tr {
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas:
+      "week week week"
+      "opponent result delete";
+  }
+
+  .varsity-schedule-table.schedule-editing td.col-actions {
+    grid-area: delete;
+    align-self: end;
+    width: auto !important;
+  }
+
+  .home-section .schedule-block {
+    overflow: visible;
+  }
+
+  .home-section .schedule-block table {
+    table-layout: fixed;
+    width: 100%;
+    font-size: 0.78rem;
+  }
+
+  .home-section .schedule-block th,
+  .home-section .schedule-block td {
+    padding: 0.5rem 0.4rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    vertical-align: top;
+    min-width: 0;
+  }
+
+  .home-section .schedule-block th {
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+  }
+
+  .home-section .schedule-block th:nth-child(1),
+  .home-section .schedule-block td:nth-child(1) {
+    width: 22%;
+  }
+
+  .home-section .schedule-block th:nth-child(2),
+  .home-section .schedule-block td:nth-child(2) {
+    width: 28%;
+  }
+
+  .home-section .schedule-block th:nth-child(3),
+  .home-section .schedule-block td:nth-child(3) {
+    width: 50%;
+  }
 }

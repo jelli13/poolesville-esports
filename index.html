@@ -10,8 +10,8 @@
     href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="css/styles.css?v=5" />
-  <link rel="stylesheet" href="css/admin.css?v=4" />
+  <link rel="stylesheet" href="css/styles.css?v=7" />
+  <link rel="stylesheet" href="css/admin.css?v=5" />
 </head>
 <body>
   <header class="topbar">
@@ -263,19 +263,18 @@
                 <span class="highlights-filter-label">Player</span>
                 <select id="filter-player" class="highlights-filter-select">
                   <option value="">All Players</option>
-                  <option value="Shatterlol">Shatterlol</option>
-                  <option value="BlaKKat">BlaKKat</option>
-                  <option value="AcidSquirrel">AcidSquirrel</option>
-                  <option value="DynamiteHanSolo1">DynamiteHanSolo1</option>
+                </select>
+              </label>
+              <label class="highlights-filter-field">
+                <span class="highlights-filter-label">Week #</span>
+                <select id="filter-week" class="highlights-filter-select">
+                  <option value="">All Weeks</option>
                 </select>
               </label>
               <label class="highlights-filter-field">
                 <span class="highlights-filter-label">Opponent</span>
                 <select id="filter-opponent" class="highlights-filter-select">
                   <option value="">All Opponents</option>
-                  <option value="Blake">Blake</option>
-                  <option value="Clarksburg">Clarksburg</option>
-                  <option value="Northwood">Northwood</option>
                 </select>
               </label>
             </div>
@@ -367,12 +366,12 @@
             <input type="url" id="clip-url" name="url" placeholder="https://youtube.com/watch?v=…" required />
           </label>
           <label class="login-field">
-            <span>Game #</span>
+            <span>Week #</span>
             <input type="text" id="clip-game" name="game" placeholder="e.g. 1" required />
           </label>
           <label class="login-field">
             <span>Player</span>
-            <input type="text" id="clip-player" name="player" placeholder="e.g. 12 or player name" required />
+            <input type="text" id="clip-player" name="player" placeholder="e.g. BlaKKat" required />
           </label>
           <label class="login-field">
             <span>Opponent</span>
@@ -391,6 +390,6 @@
   </div>
 
   <script src="js/site-config.js"></script>
-  <script src="js/app.js?v=5" type="module"></script>
+  <script src="js/app.js?v=7" type="module"></script>
 </body>
 </html>
