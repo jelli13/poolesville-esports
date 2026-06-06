@@ -1,0 +1,46 @@
+[
+  {
+    "id": "week-4-blake",
+    "weekLabel": "WEEK 4",
+    "opponent": "Blake",
+    "opponentSchool": "Blake HS",
+    "result": "WIN",
+    "scoreSummary": "Game 1: PHS 16 – BHS 1 | Game 2: PHS 7 – BHS 0",
+    "fullGames": [
+      { "videoId": "k6t3Y6kCm0A", "title": "Week 4 vs Blake - Game 1 Full Match" },
+      { "videoId": "Cx0UffUPvec", "title": "Week 4 vs Blake - Game 2 Full Match" }
+    ],
+    "playerClips": [
+      { "player": "Shatterlol Goals", "clips": [] },
+      { "player": "BlaKKat Goals", "clips": [] },
+      { "player": "AcidSquirrel Goals", "clips": [] },
+      { "player": "DynamiteHanSolo1 Goals", "clips": [] }
+    ]
+  },
+  {
+    "id": "week-2-clarksburg",
+    "weekLabel": "WEEK 2",
+    "opponent": "Clarksburg",
+    "opponentSchool": "Clarksburg HS",
+    "result": "LOSS",
+    "scoreSummary": "Game 1: CHS 2 – PHS 1 | Game 2: CHS 3 – PHS 0",
+    "fullGames": [
+      { "videoId": "UR24HLh3cbo", "title": "Week 2 vs Clarksburg - Full Match" }
+    ],
+    "playerClips": []
+  },
+  {
+    "id": "week-1-northwood",
+    "weekLabel": "WEEK 1",
+    "opponent": "Northwood",
+    "opponentSchool": "Northwood HS",
+    "result": "WIN",
+    "scoreSummary": "Game 1: PHS 7 – NHS 1 | Game 2: PHS 8 – NHS 2",
+    "fullGames": [],
+    "playerClips": [
+      { "player": "BlaKKat Goals", "clips": [] },
+      { "player": "AcidSquirrel Goals", "clips": [] },
+      { "player": "Shatterlol Goals", "clips": [] }
+    ]
+  }
+]

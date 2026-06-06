@@ -1,53 +1,38 @@
 import { isAdminLoggedIn } from "./admin-auth.js";
 import { loadPlayers, savePlayers } from "./data-store.js";
 import { syncAdminControls } from "./admin-controls.js";
+import { escapeHtml } from "./home.js";
 
 let players = [];
 let editMode = false;
 
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
+const PLACEHOLDER_COUNT = 6;
 
 function normalizePlayersData(data) {
-  if (Array.isArray(data?.players)) return data.players;
-  if (typeof data?.text === "string" && data.text.trim()) {
-    return data.text
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(Boolean)
-      .map((line) => {
-        const [name = "TBD", gamertag = "", role = "Player"] = line
-          .split(/[·|]/)
-          .map((part) => part.trim());
-        return { name, gamertag, role };
-      });
-  }
+  if (Array.isArray(data?.players) && data.players.length) return data.players;
   return [];
 }
 
-function avatarSvg() {
-  return `<svg class="player-avatar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-    <path fill="currentColor" d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
-  </svg>`;
+function renderPlaceholderCards() {
+  return Array.from({ length: PLACEHOLDER_COUNT }, () => `
+    <!-- TODO: Replace with actual player gamertag and role -->
+    <article class="player-card">
+      <!-- IMAGE PLACEHOLDER: Player Avatar — TBD — swap with <img> when assets are ready -->
+      <div class="img-placeholder img-placeholder--avatar" aria-hidden="true">
+        <span>📷 Player Avatar — TBD</span>
+      </div>
+      <p class="player-gamertag-gold">—</p>
+      <span class="player-role">Rocket League — Varsity</span>
+    </article>`).join("");
 }
 
 function renderPlayerCard(player, index) {
-  const name = escapeHtml(player.name || "TBD");
-  const gamertag = escapeHtml(player.gamertag || "");
-  const role = escapeHtml(player.role || "Player");
+  const gamertag = escapeHtml(player.gamertag || player.name || "TBD");
+  const role = escapeHtml(player.role || "Rocket League — Varsity");
 
   if (editMode) {
     return `
       <article class="player-card player-card--editing" data-player-index="${index}">
-        <label class="player-edit-field">
-          <span>Name</span>
-          <input type="text" class="player-edit-name" value="${name}" />
-        </label>
         <label class="player-edit-field">
           <span>Gamertag</span>
           <input type="text" class="player-edit-gamertag" value="${gamertag}" />
@@ -62,9 +47,11 @@ function renderPlayerCard(player, index) {
 
   return `
     <article class="player-card">
-      <div class="player-avatar" aria-hidden="true">${avatarSvg()}</div>
-      <h3 class="player-name">${name}</h3>
-      ${gamertag ? `<p class="player-gamertag">@${gamertag}</p>` : ""}
+      <!-- IMAGE PLACEHOLDER: Player Avatar — ${gamertag} — swap with <img> when assets are ready -->
+      <div class="img-placeholder img-placeholder--avatar" aria-hidden="true">
+        <span>📷 Player Avatar — ${gamertag}</span>
+      </div>
+      <p class="player-gamertag-gold">${gamertag}</p>
       <span class="player-role">${role}</span>
     </article>`;
 }
@@ -73,16 +60,14 @@ function renderPlayers() {
   const content = document.getElementById("players-content");
   if (!content) return;
 
-  if (!players.length && !editMode) {
-    content.innerHTML =
-      '<p class="players-empty">Varsity roster will be posted here once the season begins.</p>';
-    content.classList.remove("players-editing");
-    return;
-  }
+  const cards =
+    players.length > 0
+      ? players.map((player, index) => renderPlayerCard(player, index)).join("")
+      : renderPlaceholderCards();
 
   content.innerHTML = `
     <div class="player-grid">
-      ${players.map((player, index) => renderPlayerCard(player, index)).join("")}
+      ${cards}
     </div>
     ${
       editMode
@@ -103,7 +88,7 @@ function renderPlayers() {
 
   document.getElementById("btn-add-player")?.addEventListener("click", () => {
     readPlayersFromDom();
-    players.push({ name: "New Player", gamertag: "", role: "Player" });
+    players.push({ name: "NewPlayer", gamertag: "NewPlayer", role: "Rocket League — Varsity" });
     renderPlayers();
   });
 }
@@ -112,11 +97,14 @@ function readPlayersFromDom() {
   const content = document.getElementById("players-content");
   if (!content || !editMode) return players;
 
-  players = [...content.querySelectorAll(".player-card--editing")].map((card) => ({
-    name: card.querySelector(".player-edit-name")?.value.trim() ?? "",
-    gamertag: card.querySelector(".player-edit-gamertag")?.value.trim() ?? "",
-    role: card.querySelector(".player-edit-role")?.value.trim() ?? "Player",
-  }));
+  players = [...content.querySelectorAll(".player-card--editing")].map((card) => {
+    const gamertag = card.querySelector(".player-edit-gamertag")?.value.trim() ?? "";
+    return {
+      name: gamertag,
+      gamertag,
+      role: card.querySelector(".player-edit-role")?.value.trim() ?? "Rocket League — Varsity",
+    };
+  });
 
   return players;
 }
@@ -131,8 +119,7 @@ export async function initPlayers() {
     players = normalizePlayersData(data);
   } catch (err) {
     console.error(err);
-    content.innerHTML = '<p class="players-empty">Could not load player roster.</p>';
-    return;
+    players = [];
   }
 
   renderPlayers();

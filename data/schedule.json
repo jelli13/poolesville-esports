@@ -1,11 +1,11 @@
 [
-  { "week": "Week 1 (2/11)", "opponent": "Northwood", "result": "W" },
-  { "week": "Week 2 (2/18)", "opponent": "Clarksburg", "result": "L" },
-  { "week": "Bye (2/25)", "opponent": "—", "result": "—" },
-  { "week": "Week 4 (3/4)", "opponent": "Blake", "result": "W" },
-  { "week": "Week 5 (3/12)", "opponent": "Seneca Valley", "result": "—" },
-  { "week": "Week 6 (3/18)", "opponent": "Watkins Mill", "result": "—" },
-  { "week": "Week 7 (3/25)", "opponent": "Quince Orchard", "result": "—" },
-  { "week": "Quarterfinals (4/8)", "opponent": "TBD", "result": "—" },
-  { "week": "Semifinals / Finals (4/18)", "opponent": "TBD", "result": "—" }
+  { "week": "Week 1", "date": "February 11, 2026", "opponent": "vs. Northwood", "result": "W", "score": "" },
+  { "week": "Week 2", "date": "February 18, 2026", "opponent": "vs. Clarksburg", "result": "L", "score": "" },
+  { "week": "Week 3", "date": "February 25, 2026", "opponent": "BYE", "result": "BYE", "score": "" },
+  { "week": "Week 4", "date": "March 4, 2026", "opponent": "vs. Blake", "result": "W", "score": "" },
+  { "week": "Week 5", "date": "March 12, 2026", "opponent": "vs. Seneca Valley", "result": "TBD", "score": "" },
+  { "week": "Week 6", "date": "March 18, 2026", "opponent": "vs. Watkins Mill", "result": "TBD", "score": "" },
+  { "week": "Week 7", "date": "March 25, 2026", "opponent": "vs. Quince Orchard", "result": "TBD", "score": "" },
+  { "week": "Quarterfinals", "date": "April 8, 2026", "opponent": "TBD", "result": "TBD", "score": "" },
+  { "week": "Semifinals / Finals", "date": "April 18, 2026", "opponent": "TBD", "result": "TBD", "score": "" }
 ]

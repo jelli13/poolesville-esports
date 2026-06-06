@@ -17,17 +17,11 @@ const mainNavButtons = document.querySelectorAll(
 );
 const aboutTabButtons = document.querySelectorAll("[data-about-tab]");
 const varsityTabButtons = document.querySelectorAll("[data-varsity-tab]");
-const clubTabButtons = document.querySelectorAll("[data-club-tab]");
-const eventsTabButtons = document.querySelectorAll("[data-events-tab]");
 const pages = document.querySelectorAll(".page");
 const varsityPanels = document.querySelectorAll(".varsity-panel");
 const aboutPanels = document.querySelectorAll(".about-panel");
-const clubPanels = document.querySelectorAll(".club-panel");
-const eventsPanels = document.querySelectorAll(".event-panel");
 const navGroupVarsity = document.getElementById("nav-group-varsity");
 const navGroupAbout = document.getElementById("nav-group-about");
-const navGroupClub = document.getElementById("nav-group-club");
-const navGroupEvents = document.getElementById("nav-group-events");
 
 const mobileNavQuery = window.matchMedia("(max-width: 900px)");
 
@@ -124,9 +118,9 @@ async function showVarsityTab(tabId) {
   }
 
   if (tabId === "highlights" && !highlightsReady) {
+    const { initHighlights } = await import("./highlights.js?v=3");
+    await initHighlights();
     highlightsReady = true;
-    const { initHighlights } = await import("./highlights.js");
-    initHighlights();
   }
 
   if (tabId === "players" && !playersReady) {
@@ -142,26 +136,12 @@ function showAboutTab(tabId) {
   });
 }
 
-function showClubTab(tabId) {
-  clubPanels.forEach((panel) => {
-    panel.classList.toggle("is-active", panel.id === `club-${tabId}`);
-  });
-}
-
-function showEventsTab(tabId) {
-  eventsPanels.forEach((panel) => {
-    panel.classList.toggle("is-active", panel.id === `events-${tabId}`);
-  });
-}
-
 function syncNavGroups(pageId) {
   navGroupVarsity?.classList.toggle("is-expanded", pageId === "varsity");
   navGroupAbout?.classList.toggle("is-expanded", pageId === "about");
-  navGroupClub?.classList.toggle("is-expanded", pageId === "club");
-  navGroupEvents?.classList.toggle("is-expanded", pageId === "events");
 }
 
-function syncSubtabNav(pageId, { varsityTab, aboutTab, clubTab, eventsTab }) {
+function syncSubtabNav(pageId, { varsityTab, aboutTab }) {
   varsityTabButtons.forEach((btn) => {
     btn.classList.toggle(
       "is-active",
@@ -175,29 +155,10 @@ function syncSubtabNav(pageId, { varsityTab, aboutTab, clubTab, eventsTab }) {
       pageId === "about" && btn.dataset.aboutTab === aboutTab
     );
   });
-
-  clubTabButtons.forEach((btn) => {
-    btn.classList.toggle(
-      "is-active",
-      pageId === "club" && btn.dataset.clubTab === clubTab
-    );
-  });
-
-  eventsTabButtons.forEach((btn) => {
-    btn.classList.toggle(
-      "is-active",
-      pageId === "events" && btn.dataset.eventsTab === eventsTab
-    );
-  });
 }
 
 function showPage(pageId, options = {}) {
-  const {
-    varsityTab = "schedule",
-    aboutTab = "what-is-esports",
-    clubTab = "what-is-esports",
-    eventsTab = "nba-2k-tournament",
-  } = options;
+  const { varsityTab = "schedule", aboutTab = "what-is-esports" } = options;
 
   pages.forEach((page) => {
     page.classList.toggle("is-active", page.id === `page-${pageId}`);
@@ -213,10 +174,8 @@ function showPage(pageId, options = {}) {
 
   if (pageId === "varsity") showVarsityTab(varsityTab);
   if (pageId === "about") showAboutTab(aboutTab);
-  if (pageId === "club") showClubTab(clubTab);
-  if (pageId === "events") showEventsTab(eventsTab);
 
-  syncSubtabNav(pageId, { varsityTab, aboutTab, clubTab, eventsTab });
+  syncSubtabNav(pageId, { varsityTab, aboutTab });
 
   syncAdminControls();
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -228,7 +187,6 @@ mainNavButtons.forEach((btn) => {
     const options = {};
     if (pageId === "varsity") options.varsityTab = "schedule";
     if (pageId === "about") options.aboutTab = "what-is-esports";
-    if (pageId === "events") options.eventsTab = "nba-2k-tournament";
     showPage(pageId, options);
   });
 });
@@ -245,15 +203,10 @@ aboutTabButtons.forEach((btn) => {
   });
 });
 
-clubTabButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    showPage("club", { clubTab: btn.dataset.clubTab });
-  });
-});
-
-eventsTabButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    showPage("events", { eventsTab: btn.dataset.eventsTab });
+document.querySelectorAll("[data-go-varsity]").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    showPage("varsity", { varsityTab: el.dataset.goVarsity });
   });
 });
 
@@ -262,10 +215,10 @@ document.getElementById("full-schedule-link")?.addEventListener("click", (e) => 
   showPage("varsity", { varsityTab: "schedule" });
 });
 
-document.querySelectorAll("[data-go-varsity]").forEach((el) => {
+document.querySelectorAll("[data-page-link]").forEach((el) => {
   el.addEventListener("click", (e) => {
     e.preventDefault();
-    showPage("varsity", { varsityTab: el.dataset.goVarsity });
+    showPage(el.dataset.pageLink);
   });
 });
 
@@ -284,3 +237,5 @@ import("./admin-ui.js")
   .catch((err) => {
     console.error("Admin UI failed to load:", err);
   });
+
+export { showPage };

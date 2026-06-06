@@ -1,23 +1,29 @@
 import { isAdminLoggedIn } from "./admin-auth.js";
 import { loadSchedule, saveSchedule } from "./data-store.js";
 import { syncAdminControls } from "./admin-controls.js";
+import { escapeHtml } from "./home.js";
 
 let scheduleRows = [];
 let editMode = false;
 
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+function formatResultBadge(result) {
+  const r = String(result).trim().toUpperCase();
+  if (r === "W") return '<span class="result-badge result-badge--win">W</span>';
+  if (r === "L") return '<span class="result-badge result-badge--loss">L</span>';
+  if (r === "BYE") return '<span class="result-badge result-badge--bye">BYE</span>';
+  if (r === "—" || r === "" || r === "TBD") {
+    return '<span class="result-badge result-badge--tbd">TBD</span>';
+  }
+  return escapeHtml(result);
 }
 
-function formatResultCell(result) {
-  const r = String(result).trim();
-  if (r === "W") return '<span class="result-win">W</span>';
-  if (r === "L") return '<span class="result-loss">L</span>';
-  return escapeHtml(r || "—");
+function formatScoreCell(score, result) {
+  const s = String(score ?? "").trim();
+  const r = String(result ?? "").trim().toUpperCase();
+  if (!s || r === "TBD" || r === "BYE" || r === "—") {
+    return '<span class="schedule-score schedule-score--empty" aria-hidden="true">—</span>';
+  }
+  return `<span class="schedule-score">${escapeHtml(s)}</span>`;
 }
 
 function updateScheduleAdminButtons() {
@@ -37,10 +43,14 @@ function renderScheduleTable() {
     .map(
       (row, index) => `
     <tr data-row-index="${index}">
-      <td class="col-week"${editMode ? ' contenteditable="true"' : ""}>${escapeHtml(row.week)}</td>
-      <td${editMode ? ' contenteditable="true"' : ""}>${escapeHtml(row.opponent)}</td>
+      <td class="col-week"${editMode ? ' contenteditable="true"' : ""}>${escapeHtml(row.week ?? "")}</td>
+      <td${editMode ? ' contenteditable="true"' : ""}>${escapeHtml(row.date ?? "")}</td>
+      <td${editMode ? ' contenteditable="true"' : ""}>${escapeHtml(row.opponent ?? "")}</td>
       <td class="col-result"${editMode ? ' contenteditable="true"' : ""}>${
-        editMode ? escapeHtml(row.result) : formatResultCell(row.result)
+        editMode ? escapeHtml(row.result ?? "") : formatResultBadge(row.result)
+      }</td>
+      <td class="col-score"${editMode ? ' contenteditable="true"' : ""}>${
+        editMode ? escapeHtml(row.score ?? "") : formatScoreCell(row.score, row.result)
       }</td>
       ${
         editMode
@@ -55,11 +65,11 @@ function renderScheduleTable() {
 
   tbody.querySelectorAll(".schedule-row-delete").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const index = Number(btn.dataset.rowIndex);
+      const idx = Number(btn.dataset.rowIndex);
       scheduleRows = readTableIntoRows();
-      if (index < 0 || index >= scheduleRows.length) return;
+      if (idx < 0 || idx >= scheduleRows.length) return;
       if (!confirm("Delete this schedule row?")) return;
-      scheduleRows.splice(index, 1);
+      scheduleRows.splice(idx, 1);
       renderScheduleTable();
     });
   });
@@ -77,8 +87,10 @@ function readTableIntoRows() {
     const cells = tr.querySelectorAll("td");
     return {
       week: cells[0]?.textContent.trim() ?? "",
-      opponent: cells[1]?.textContent.trim() ?? "",
-      result: cells[2]?.textContent.trim() ?? "",
+      date: cells[1]?.textContent.trim() ?? "",
+      opponent: cells[2]?.textContent.trim() ?? "",
+      result: cells[3]?.textContent.trim() ?? "",
+      score: cells[4]?.textContent.trim() ?? "",
     };
   });
 }
@@ -87,9 +99,11 @@ function addScheduleRow() {
   if (!isAdminLoggedIn() || !editMode) return;
   scheduleRows = readTableIntoRows();
   scheduleRows.push({
-    week: "New week (date)",
-    opponent: "TBD",
-    result: "—",
+    week: "New week",
+    date: "TBD",
+    opponent: "vs. TBD",
+    result: "TBD",
+    score: "",
   });
   renderScheduleTable();
 }
@@ -130,9 +144,7 @@ function wireAddRowButton() {
   if (!btn) return;
 
   btn.replaceWith(btn.cloneNode(true));
-  document.getElementById("btn-add-schedule-row")?.addEventListener("click", () => {
-    addScheduleRow();
-  });
+  document.getElementById("btn-add-schedule-row")?.addEventListener("click", addScheduleRow);
 }
 
 export async function initSchedule() {
@@ -143,7 +155,7 @@ export async function initSchedule() {
     scheduleRows = await loadSchedule();
   } catch {
     tbody.innerHTML =
-      '<tr><td colspan="4">Could not load schedule. Use a local server.</td></tr>';
+      '<tr><td colspan="5">Could not load schedule. Use a local server.</td></tr>';
     return;
   }
 

@@ -162,11 +162,14 @@ export function clearHighlightFilters() {
 }
 
 export async function reloadHighlights() {
+  dataLoaded = false;
   await ensureHighlightsLoaded();
   highlightsData = await loadHighlights();
   populateFilterDropdowns();
   applyGalleryFilters();
 }
+
+let filterPanelWired = false;
 
 function setFilterPanelOpen(open) {
   const panel = document.getElementById("highlights-filter-panel");
@@ -178,15 +181,22 @@ function setFilterPanelOpen(open) {
 }
 
 function wireFilterPanel() {
+  if (filterPanelWired) return;
+
   const wrap = document.getElementById("highlights-search-wrap");
   const searchInput = document.getElementById("highlights-search");
   const panel = document.getElementById("highlights-filter-panel");
   if (!wrap || !searchInput || !panel) return;
 
-  searchInput.addEventListener("focus", () => setFilterPanelOpen(true));
-  searchInput.addEventListener("click", () => setFilterPanelOpen(true));
+  filterPanelWired = true;
 
-  document.addEventListener("click", (e) => {
+  const openPanel = () => setFilterPanelOpen(true);
+
+  searchInput.addEventListener("focus", openPanel);
+  searchInput.addEventListener("click", openPanel);
+  wrap.addEventListener("mousedown", (e) => e.stopPropagation());
+
+  document.addEventListener("mousedown", (e) => {
     if (!wrap.contains(e.target)) {
       setFilterPanelOpen(false);
     }
@@ -206,16 +216,18 @@ export async function initHighlights() {
 
   if (!gallery) return;
 
+  wireFilterPanel();
+
   try {
     highlightsData = await loadHighlights();
     dataLoaded = true;
   } catch {
     gallery.innerHTML =
       '<p class="placeholder-text">Could not load highlights. Run the site with a local server.</p>';
+    populateFilterDropdowns();
     return;
   }
 
-  wireFilterPanel();
   populateFilterDropdowns();
   renderGallery(gallery, emptyEl, searchInput?.value ?? "");
 
