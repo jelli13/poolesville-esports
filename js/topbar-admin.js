@@ -5,9 +5,10 @@ export function renderAdminGate() {
   if (!footer) return;
 
   if (isAdminLoggedIn()) {
-    footer.innerHTML = '<span class="footer-staff-status">Admin · signed in</span>';
+    footer.innerHTML = '<span class="footer-staff-status"><span class="footer-staff-status-long">Admin · signed in</span><span class="footer-staff-status-short">Admin</span></span>';
     return;
   }
 
-  footer.innerHTML = '<a href="login.html" class="footer-staff-link">Admin Login</a>';
+  footer.innerHTML =
+    '<a href="login.html" class="footer-staff-link" aria-label="Admin Login"><span class="footer-staff-link-long">Admin Login</span><span class="footer-staff-link-short">Admin</span></a>';
 }

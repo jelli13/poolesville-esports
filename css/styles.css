@@ -1014,84 +1014,128 @@ body.nav-open .main {
   color: var(--gold);
 }
 
-/* Home contact links */
-.home-contact {
+/* Home social links */
+.home-social {
   margin-top: 2rem;
 }
 
-.contact-links {
+.social-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.social-header h2 {
+  margin-bottom: 0.5rem;
+}
+
+.social-lead {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin: 0;
+  max-width: 32rem;
+  margin-inline: auto;
+}
+
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.social-card {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  margin-top: 1.25rem;
-  padding: 1.25rem 1.5rem;
+  gap: 1rem;
+  padding: 1.1rem 1.15rem;
   background: var(--black-elevated);
   border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-.home-contact .contact-link,
-.home-contact .contact-link:visited {
-  display: inline-flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.5rem;
-  color: #fff;
+  border-radius: 10px;
   text-decoration: none;
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-weight: 600;
-  line-height: 1.125rem;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  transition: color 0.2s ease;
+  color: inherit;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
 }
 
-.home-contact .contact-link:hover,
-.home-contact .contact-link:hover:visited {
-  color: var(--gold-bright);
+.social-card:hover {
+  border-color: rgba(255, 194, 0, 0.45);
+  background: rgba(255, 194, 0, 0.05);
+  transform: translateY(-1px);
 }
 
-.home-contact .contact-link:focus-visible {
+.social-card:hover .social-card-icon {
+  color: var(--gold);
+}
+
+.social-card:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 3px;
-  border-radius: 4px;
 }
 
-/* Emoji-sized icons inline with link text (~18px) */
-.home-contact .contact-icon {
-  display: inline-flex;
+.social-card-icon {
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.125rem;
-  height: 1.125rem;
-  min-width: 1.125rem;
-  min-height: 1.125rem;
   flex-shrink: 0;
-  color: #fff;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 194, 0, 0.35);
+  background: rgba(255, 194, 0, 0.08);
+  color: var(--text);
 }
 
-.home-contact .contact-link:hover .contact-icon {
+.social-card-icon svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.social-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.social-card-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.social-card-desc {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.social-card-action {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  transition: color 0.2s;
+}
+
+.social-card:hover .social-card-action {
   color: var(--gold-bright);
 }
 
-.home-contact .contact-icon svg,
-.home-contact .contact-icon-svg {
-  display: block;
-  width: 1.125rem !important;
-  height: 1.125rem !important;
-  max-width: 1.125rem;
-  max-height: 1.125rem;
-  flex-shrink: 0;
-}
+@media (max-width: 640px) {
+  .social-grid {
+    grid-template-columns: 1fr;
+  }
 
-.home-contact .contact-label {
-  display: inline-flex;
-  align-items: center;
-  line-height: 1.125rem;
-  color: inherit;
+  .social-card-action {
+    display: none;
+  }
 }
 
 /* Varsity players roster */
@@ -1461,9 +1505,15 @@ body.nav-open .main {
   border-top: 1px solid var(--border);
 }
 
+.footer-staff-link-short,
+.footer-staff-status-short,
+.footer-link-short {
+  display: none;
+}
+
 @media (max-width: 900px) {
   body {
-    padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(3.25rem + env(safe-area-inset-bottom, 0px));
   }
 
   .site-footer {
@@ -1480,7 +1530,7 @@ body.nav-open .main {
   .footer-inner {
     display: flex;
     align-items: center;
-    padding: 0.75rem 0.85rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.65rem 0.65rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
     gap: 0;
   }
 
@@ -1493,28 +1543,35 @@ body.nav-open .main {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    justify-content: flex-start;
-    gap: 0.9rem;
+    justify-content: center;
+    gap: 0.55rem;
     width: 100%;
-    min-height: 1.75rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .footer-links::-webkit-scrollbar {
-    display: none;
+    min-height: 1.5rem;
+    overflow-x: hidden;
   }
 
   .footer-links a,
   .footer-staff-link,
   .footer-staff-status {
-    font-size: 0.8125rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.03em;
     white-space: nowrap;
-    flex-shrink: 0;
+    flex-shrink: 1;
+    min-width: 0;
     color: var(--gold);
+  }
+
+  .footer-staff-link-long,
+  .footer-staff-status-long,
+  .footer-link-long {
+    display: none;
+  }
+
+  .footer-staff-link-short,
+  .footer-staff-status-short,
+  .footer-link-short {
+    display: inline;
   }
 
   .footer-staff-link {
@@ -1639,7 +1696,24 @@ body.nav-open .main {
 
 @media (max-width: 640px) {
   #qualifications-block.qualifications-block {
-    padding: 1.75rem 1.25rem;
+    padding: 1.75rem 1rem;
+    overflow: hidden;
+  }
+
+  #qualifications-block .page-title {
+    font-size: clamp(1.35rem, 7.5vw, 2rem);
+    letter-spacing: 0.04em;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
+    padding-inline: 0.25rem;
+  }
+
+  #qualifications-block .qualifications-intro,
+  #qualifications-block .qualifications-list {
+    font-size: 0.95rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .page-inner,

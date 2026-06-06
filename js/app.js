@@ -115,10 +115,6 @@ async function showVarsityTab(tabId) {
     panel.classList.toggle("is-active", panel.id === `varsity-${tabId}`);
   });
 
-  varsityTabButtons.forEach((btn) => {
-    btn.classList.toggle("is-active", btn.dataset.varsityTab === tabId);
-  });
-
   syncAdminControls();
 
   if (tabId === "schedule" && !scheduleReady) {
@@ -144,29 +140,17 @@ function showAboutTab(tabId) {
   aboutPanels.forEach((panel) => {
     panel.classList.toggle("is-active", panel.id === `about-${tabId}`);
   });
-
-  aboutTabButtons.forEach((btn) => {
-    btn.classList.toggle("is-active", btn.dataset.aboutTab === tabId);
-  });
 }
 
 function showClubTab(tabId) {
   clubPanels.forEach((panel) => {
     panel.classList.toggle("is-active", panel.id === `club-${tabId}`);
   });
-
-  clubTabButtons.forEach((btn) => {
-    btn.classList.toggle("is-active", btn.dataset.clubTab === tabId);
-  });
 }
 
 function showEventsTab(tabId) {
   eventsPanels.forEach((panel) => {
     panel.classList.toggle("is-active", panel.id === `events-${tabId}`);
-  });
-
-  eventsTabButtons.forEach((btn) => {
-    btn.classList.toggle("is-active", btn.dataset.eventsTab === tabId);
   });
 }
 
@@ -175,6 +159,36 @@ function syncNavGroups(pageId) {
   navGroupAbout?.classList.toggle("is-expanded", pageId === "about");
   navGroupClub?.classList.toggle("is-expanded", pageId === "club");
   navGroupEvents?.classList.toggle("is-expanded", pageId === "events");
+}
+
+function syncSubtabNav(pageId, { varsityTab, aboutTab, clubTab, eventsTab }) {
+  varsityTabButtons.forEach((btn) => {
+    btn.classList.toggle(
+      "is-active",
+      pageId === "varsity" && btn.dataset.varsityTab === varsityTab
+    );
+  });
+
+  aboutTabButtons.forEach((btn) => {
+    btn.classList.toggle(
+      "is-active",
+      pageId === "about" && btn.dataset.aboutTab === aboutTab
+    );
+  });
+
+  clubTabButtons.forEach((btn) => {
+    btn.classList.toggle(
+      "is-active",
+      pageId === "club" && btn.dataset.clubTab === clubTab
+    );
+  });
+
+  eventsTabButtons.forEach((btn) => {
+    btn.classList.toggle(
+      "is-active",
+      pageId === "events" && btn.dataset.eventsTab === eventsTab
+    );
+  });
 }
 
 function showPage(pageId, options = {}) {
@@ -201,6 +215,8 @@ function showPage(pageId, options = {}) {
   if (pageId === "about") showAboutTab(aboutTab);
   if (pageId === "club") showClubTab(clubTab);
   if (pageId === "events") showEventsTab(eventsTab);
+
+  syncSubtabNav(pageId, { varsityTab, aboutTab, clubTab, eventsTab });
 
   syncAdminControls();
   window.scrollTo({ top: 0, behavior: "smooth" });

@@ -124,9 +124,13 @@ app.post("/api/highlights", requireAdmin, async (req, res) => {
   }
 });
 
+app.get("/health", (_req, res) => {
+  res.type("text/plain").send("ok");
+});
+
 app.use(express.static(ROOT));
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Poolesville Esports site: http://localhost:${PORT}`);
   console.log("Admin saves update data/schedule.json and data/highlights.json for all visitors.");
 });

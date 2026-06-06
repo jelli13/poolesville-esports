@@ -8,6 +8,33 @@ Static site for Poolesville High School Esports (black & gold).
 - **Left sidebar:** Collapsible nav — Home, Varsity Team, Club Info, Events
 - **Home:** Hero, What is Esports (FAQ templates), this week’s varsity schedule + full schedule link
 
+## Share with clients (public preview)
+
+**Live site (Render):** https://poolesville-esports.onrender.com/
+
+Use the root URL above — not `localhost`, and `/index.html` is optional.
+
+### If the link “times out” for someone
+
+Render’s **free tier sleeps** after ~15 minutes with no visitors. The **first open after that** can take **30–90 seconds** while the server wakes up. Many browsers and school networks give up before that, which looks like a timeout.
+
+**Fixes (pick one or combine):**
+
+1. **Keep the service warm** — Free [UptimeRobot](https://uptimerobot.com) monitor: ping `https://poolesville-esports.onrender.com/health` every 5 minutes.
+2. **Tell viewers to wait and refresh once** — First load after idle may be slow; a second try is usually instant.
+3. **Upgrade Render** to a paid plan ($7/mo) for always-on (no cold starts).
+4. **Backup static link** — GitHub Pages (see below) loads instantly; use it for demos if MCPS blocks `onrender.com`.
+
+If staff are on **MCPS Wi‑Fi**, `*.onrender.com` is sometimes filtered. Try GitHub Pages or have them test on phone data.
+
+### GitHub Pages (fast static backup)
+
+1. Repo **Settings → Pages → Source: GitHub Actions**
+2. Push to `main` (workflow included in `.github/workflows/pages.yml`)
+3. Share: **https://jelli13.github.io/poolesville-esports/**
+
+Public Pages site reads `data/*.json` directly. Admin saves still need Render (or another host running `npm start`).
+
 ## Run locally
 
 Use the Node server so administrator edits to **Schedule** and **Game Highlights** are saved to `data/schedule.json` and `data/highlights.json` for every visitor:
@@ -34,5 +61,6 @@ Optional environment variables on the server: `ADMIN_USERNAME`, `ADMIN_PASSWORD`
 
 ## Customize
 
+- **`js/site-config.js`** — Discord, YouTube, PHS link, **contact email** (`links.email`), interest form URL
 - Copy in `index.html` for hero text, FAQ copy, and schedule rows
 - Set `href` on `#full-schedule-link` when you have the full schedule URL
