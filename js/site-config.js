@@ -7,7 +7,7 @@ window.PHS_SITE_CONFIG = window.PHS_SITE_CONFIG || {
   interestFormUrl: "",
   links: {
     discord: "https://discord.gg/",
-    youtube: "https://www.youtube.com/",
+    youtube: "https://www.youtube.com/@FalconEsportsLetsGo/videos",
     phs: "https://www.montgomeryschoolsmd.org/schools/poolesvillehs/",
     email: "mailto:Adam_Broome@mcpsmd.org",
   },
