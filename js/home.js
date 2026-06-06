@@ -26,6 +26,22 @@ function wireContactLinks() {
   if (links.phs && footerPhs) footerPhs.href = links.phs;
 }
 
+function interestFormEmbedUrl(viewformUrl) {
+  const url = viewformUrl.trim();
+  if (url.includes("embedded=true")) return url;
+  return `${url}${url.includes("?") ? "&" : "?"}embedded=true`;
+}
+
+function wireJoinTeamLink() {
+  const link = document.getElementById("hero-join-link");
+  const url = window.PHS_SITE_CONFIG?.interestFormUrl?.trim();
+  if (!link || !url) return;
+
+  link.href = url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+}
+
 function wireInterestForm() {
   const section = document.getElementById("home-interest-section");
   const iframe = document.getElementById("interest-form-iframe");
@@ -38,7 +54,7 @@ function wireInterestForm() {
     return;
   }
 
-  iframe.src = url;
+  iframe.src = interestFormEmbedUrl(url);
   section.hidden = false;
 }
 
@@ -82,5 +98,6 @@ async function populateHomeSchedule() {
 export async function initHome() {
   wireContactLinks();
   wireInterestForm();
+  wireJoinTeamLink();
   await populateHomeSchedule();
 }

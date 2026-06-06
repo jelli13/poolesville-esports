@@ -130,7 +130,7 @@ app.get("/health", (_req, res) => {
 
 app.use(express.static(ROOT));
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Poolesville Esports site: http://localhost:${PORT}`);
+app.listen({ port: PORT, host: "::", ipv6Only: false }, () => {
+  console.log(`Poolesville Esports site: http://127.0.0.1:${PORT}`);
   console.log("Admin saves update data/schedule.json and data/highlights.json for all visitors.");
 });
