@@ -69,12 +69,13 @@ body.nav-open .main {
 
   .site-nav {
     position: absolute;
-    left: 50%;
+    right: max(1.5rem, calc((100% - 76rem) / 2 + 1.5rem));
+    left: auto;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
     flex: none;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     background: transparent;
     padding: 0;
@@ -273,9 +274,18 @@ body.nav-open .main {
 }
 
 @media (min-width: 901px) {
-  .nav-dropdown:hover .nav-dropdown-menu,
   .nav-dropdown.is-open .nav-dropdown-menu {
     display: block;
+  }
+
+  /* Invisible bridge so the pointer can reach the menu without leaving the dropdown */
+  .nav-dropdown-menu::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -0.5rem;
+    height: 0.5rem;
   }
 }
 
@@ -410,12 +420,14 @@ body.nav-open .main {
 /* —— Varsity / Club / Events panels —— */
 .varsity-panel,
 .club-panel,
+.about-panel,
 .event-panel {
   display: none;
 }
 
 .varsity-panel.is-active,
 .club-panel.is-active,
+.about-panel.is-active,
 .event-panel.is-active {
   display: block;
 }

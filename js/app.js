@@ -15,14 +15,17 @@ const navBackdrop = document.getElementById("nav-backdrop");
 const mainNavButtons = document.querySelectorAll(
   ".site-nav > ul > li > button[data-page], .nav-dropdown > button[data-page]"
 );
+const aboutTabButtons = document.querySelectorAll("[data-about-tab]");
 const varsityTabButtons = document.querySelectorAll("[data-varsity-tab]");
 const clubTabButtons = document.querySelectorAll("[data-club-tab]");
 const eventsTabButtons = document.querySelectorAll("[data-events-tab]");
 const pages = document.querySelectorAll(".page");
 const varsityPanels = document.querySelectorAll(".varsity-panel");
+const aboutPanels = document.querySelectorAll(".about-panel");
 const clubPanels = document.querySelectorAll(".club-panel");
 const eventsPanels = document.querySelectorAll(".event-panel");
 const navGroupVarsity = document.getElementById("nav-group-varsity");
+const navGroupAbout = document.getElementById("nav-group-about");
 const navGroupClub = document.getElementById("nav-group-club");
 const navGroupEvents = document.getElementById("nav-group-events");
 
@@ -58,6 +61,23 @@ function closeAllDropdowns() {
   });
 }
 
+function initDesktopDropdownHover() {
+  document.querySelectorAll(".nav-dropdown").forEach((dropdown) => {
+    dropdown.addEventListener("mouseenter", () => {
+      if (isMobileNav()) return;
+      closeAllDropdowns();
+      dropdown.classList.add("is-open");
+    });
+
+    dropdown.addEventListener("mouseleave", () => {
+      if (isMobileNav()) return;
+      dropdown.classList.remove("is-open");
+    });
+  });
+}
+
+initDesktopDropdownHover();
+
 navToggle?.addEventListener("click", () => {
   if (siteNav?.classList.contains("is-open")) {
     closeMobileNav();
@@ -70,20 +90,6 @@ navToggle?.addEventListener("click", () => {
 navBackdrop?.addEventListener("click", () => {
   closeMobileNav();
   closeAllDropdowns();
-});
-
-document.querySelectorAll(".nav-dropdown-toggle").forEach((btn) => {
-  btn.addEventListener("click", (event) => {
-    if (isMobileNav()) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-    const dropdown = btn.closest(".nav-dropdown");
-    if (!dropdown) return;
-    const willOpen = !dropdown.classList.contains("is-open");
-    closeAllDropdowns();
-    if (willOpen) dropdown.classList.add("is-open");
-  });
 });
 
 document.addEventListener("click", (event) => {
@@ -134,6 +140,16 @@ async function showVarsityTab(tabId) {
   }
 }
 
+function showAboutTab(tabId) {
+  aboutPanels.forEach((panel) => {
+    panel.classList.toggle("is-active", panel.id === `about-${tabId}`);
+  });
+
+  aboutTabButtons.forEach((btn) => {
+    btn.classList.toggle("is-active", btn.dataset.aboutTab === tabId);
+  });
+}
+
 function showClubTab(tabId) {
   clubPanels.forEach((panel) => {
     panel.classList.toggle("is-active", panel.id === `club-${tabId}`);
@@ -156,6 +172,7 @@ function showEventsTab(tabId) {
 
 function syncNavGroups(pageId) {
   navGroupVarsity?.classList.toggle("is-expanded", pageId === "varsity");
+  navGroupAbout?.classList.toggle("is-expanded", pageId === "about");
   navGroupClub?.classList.toggle("is-expanded", pageId === "club");
   navGroupEvents?.classList.toggle("is-expanded", pageId === "events");
 }
@@ -163,6 +180,7 @@ function syncNavGroups(pageId) {
 function showPage(pageId, options = {}) {
   const {
     varsityTab = "schedule",
+    aboutTab = "what-is-esports",
     clubTab = "what-is-esports",
     eventsTab = "nba-2k-tournament",
   } = options;
@@ -180,6 +198,7 @@ function showPage(pageId, options = {}) {
   closeAllDropdowns();
 
   if (pageId === "varsity") showVarsityTab(varsityTab);
+  if (pageId === "about") showAboutTab(aboutTab);
   if (pageId === "club") showClubTab(clubTab);
   if (pageId === "events") showEventsTab(eventsTab);
 
@@ -192,7 +211,7 @@ mainNavButtons.forEach((btn) => {
     const pageId = btn.dataset.page;
     const options = {};
     if (pageId === "varsity") options.varsityTab = "schedule";
-    if (pageId === "club") options.clubTab = "what-is-esports";
+    if (pageId === "about") options.aboutTab = "what-is-esports";
     if (pageId === "events") options.eventsTab = "nba-2k-tournament";
     showPage(pageId, options);
   });
@@ -201,6 +220,12 @@ mainNavButtons.forEach((btn) => {
 varsityTabButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     showPage("varsity", { varsityTab: btn.dataset.varsityTab });
+  });
+});
+
+aboutTabButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    showPage("about", { aboutTab: btn.dataset.aboutTab });
   });
 });
 

@@ -10,7 +10,7 @@
     href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="css/styles.css?v=16" />
+  <link rel="stylesheet" href="css/styles.css?v=18" />
   <link rel="stylesheet" href="css/admin.css?v=9" />
 </head>
 <body>
@@ -67,14 +67,17 @@
           </li>
         </ul>
       </li>
-      <li class="nav-dropdown" id="nav-group-club">
-        <button type="button" class="nav-dropdown-toggle" data-page="club" aria-haspopup="true">
+      <li>
+        <button type="button" data-page="club">Club</button>
+      </li>
+      <li class="nav-dropdown" id="nav-group-about">
+        <button type="button" class="nav-dropdown-toggle" data-page="about" aria-haspopup="true">
           About
           <span class="nav-chevron" aria-hidden="true"></span>
         </button>
         <ul class="nav-dropdown-menu" aria-label="About sections">
           <li>
-            <button type="button" data-club-tab="what-is-esports" class="is-active">What is Esports?</button>
+            <button type="button" data-about-tab="what-is-esports" class="is-active">What is Esports?</button>
           </li>
         </ul>
       </li>
@@ -285,10 +288,15 @@
       </div>
     </div>
 
-    <!-- Club Info -->
-    <div id="page-club" class="page page-club">
+    <!-- Club (placeholder) -->
+    <div id="page-club" class="page">
+      <div class="page-inner"></div>
+    </div>
+
+    <!-- About -->
+    <div id="page-about" class="page page-about">
       <div class="page-inner">
-        <div id="club-what-is-esports" class="club-panel is-active">
+        <div id="about-what-is-esports" class="about-panel is-active">
           <section class="about-section" aria-labelledby="what-is-esports">
             <h1 class="page-title" id="what-is-esports">What is Esports?</h1>
 
@@ -431,6 +439,6 @@
   </div>
 
   <script src="js/site-config.js"></script>
-  <script src="js/app.js?v=10" type="module"></script>
+  <script src="js/app.js?v=12" type="module"></script>
 </body>
 </html>
