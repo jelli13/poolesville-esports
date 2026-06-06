@@ -1,14 +1,13 @@
 import { isAdminLoggedIn } from "./admin-auth.js";
 
 export function renderAdminGate() {
-  const el = document.getElementById("admin-gate");
-  if (!el) return;
+  const footer = document.getElementById("admin-gate-footer");
+  if (!footer) return;
 
   if (isAdminLoggedIn()) {
-    el.innerHTML =
-      '<span class="admin-gate-status">Logged in as administrator</span>';
-  } else {
-    el.innerHTML =
-      '<a href="login.html" class="admin-gate-link">Are you an administrator?</a>';
+    footer.innerHTML = '<span class="footer-staff-status">Admin · signed in</span>';
+    return;
   }
+
+  footer.innerHTML = '<a href="login.html" class="footer-staff-link">Admin Login</a>';
 }

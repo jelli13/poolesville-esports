@@ -1,7 +1,14 @@
 /**
- * Optional API host when the static site and API are on different origins
- * (e.g. GitHub Pages + Render). Leave apiBase empty when using `npm start`.
+ * Site-wide links and optional API host.
+ * Set interestFormUrl when your Google Form / signup embed is ready.
  */
 window.PHS_SITE_CONFIG = window.PHS_SITE_CONFIG || {
   apiBase: "",
+  interestFormUrl: "",
+  links: {
+    discord: "https://discord.gg/",
+    youtube: "https://www.youtube.com/",
+    phs: "https://www.montgomeryschoolsmd.org/schools/poolesvillehs/",
+    email: "mailto:Adam_Broome@mcpsmd.org",
+  },
 };

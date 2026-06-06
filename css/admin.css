@@ -1,9 +1,5 @@
-/* —— Top bar admin gate —— */
-.topbar {
-  justify-content: space-between;
-  gap: 1rem;
-}
-
+/* —— Admin / staff access —— */
+.header-admin-gate,
 .topbar-admin-gate {
   flex-shrink: 0;
 }
@@ -30,34 +26,46 @@
   text-decoration: none;
 }
 
+.login-back-link {
+  margin-left: auto;
+}
+
 /* —— Login page —— */
 .login-page {
   overflow: auto;
   min-height: 100%;
+  background: var(--black);
+}
+
+.login-top .site-header {
+  border-bottom: 2px solid var(--gold);
 }
 
 .login-main {
-  min-height: calc(100vh - var(--topbar-height));
-  margin-top: var(--topbar-height);
+  min-height: calc(100vh - var(--header-height));
   display: grid;
   place-items: center;
-  padding: 2rem 1.5rem;
+  padding: 2.5rem 1.5rem 3rem;
 }
 
 .login-card {
-  width: min(100%, 24rem);
-  padding: 2rem;
-  background: var(--black-elevated);
-  border: 1px solid var(--border);
+  width: min(100%, 26rem);
+  padding: 2.25rem;
+  background:
+    var(--circuit-pattern),
+    linear-gradient(180deg, rgba(255, 194, 0, 0.04) 0%, var(--black-elevated) 100%);
+  border: 2px solid var(--border);
   border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
 .login-card h1 {
   font-family: var(--font-brand);
-  font-size: 1.35rem;
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  font-weight: 800;
   color: var(--gold);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
   margin-bottom: 0.5rem;
 }
 
@@ -66,6 +74,7 @@
   color: var(--text-muted);
   font-size: 0.95rem;
   margin-bottom: 1.5rem;
+  line-height: 1.6;
 }
 
 .login-form {
@@ -83,8 +92,17 @@
   color: var(--text-muted);
 }
 
+.login-field span {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
 .login-field input {
-  padding: 0.65rem 0.85rem;
+  padding: 0.75rem 0.85rem;
   font: inherit;
   font-size: 1rem;
   color: var(--text);
@@ -109,23 +127,29 @@
 
 .btn-login {
   margin-top: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1rem;
   font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--black);
   background: var(--gold);
   border: 2px solid var(--gold);
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
 }
 
 .btn-login:hover {
-  background: var(--black);
-  color: var(--gold-bright);
+  background: var(--gold-bright);
+  border-color: var(--gold-bright);
+  transform: translateY(-1px);
+}
+
+.btn-login:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
 }
 
 .login-lockout p {
@@ -174,7 +198,9 @@
   width: min(100%, 22rem);
   margin: auto;
   padding: 1.75rem;
-  background: var(--black-elevated);
+  background:
+    var(--circuit-pattern),
+    var(--black-elevated);
   border: 2px solid var(--gold);
   border-radius: 12px;
   color: var(--text);
@@ -187,6 +213,7 @@
   font-size: 1.1rem;
   color: var(--gold);
   text-transform: uppercase;
+  letter-spacing: 0.08em;
   margin-bottom: 0.75rem;
 }
 
@@ -218,8 +245,8 @@
 }
 
 .btn-admin:hover {
-  background: var(--black);
-  color: var(--gold-bright);
+  background: var(--gold-bright);
+  border-color: var(--gold-bright);
 }
 
 .schedule-admin-actions {
@@ -236,14 +263,14 @@
 }
 
 .btn-admin-outline:hover {
-  background: rgba(201, 162, 39, 0.12);
+  background: rgba(255, 194, 0, 0.12);
   color: var(--gold-bright);
 }
 
 .schedule-editing td[contenteditable="true"] {
   outline: 1px dashed var(--gold);
   outline-offset: -1px;
-  background: rgba(201, 162, 39, 0.06);
+  background: rgba(255, 194, 0, 0.06);
   cursor: text;
 }
 
@@ -274,7 +301,7 @@
   transform: scale(1.05);
 }
 
-/* —— Modal (replaces dialog — avoids invisible click blocker) —— */
+/* —— Modal —— */
 .modal[hidden] {
   display: none !important;
 }
@@ -310,7 +337,9 @@
 
 .add-clip-dialog-inner {
   padding: 1.75rem;
-  background: var(--black-elevated);
+  background:
+    var(--circuit-pattern),
+    var(--black-elevated);
   border: 2px solid var(--gold);
   border-radius: 12px;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);

@@ -2,15 +2,15 @@
   --black: #0a0a0a;
   --black-soft: #121212;
   --black-elevated: #1a1a1a;
-  --gold: #c9a227;
-  --gold-bright: #e4c04a;
-  --gold-dim: #8a7020;
+  --gold: #ffc200;
+  --gold-bright: #ffd54f;
+  --gold-dim: #b38600;
   --text: #f5f5f5;
   --text-muted: #9ca3af;
-  --border: rgba(201, 162, 39, 0.2);
-  --sidebar-width: 15rem;
-  --sidebar-collapsed: 4rem;
-  --topbar-height: 3.5rem;
+  --border: rgba(255, 194, 0, 0.25);
+  --header-height: 4.25rem;
+  --topbar-height: var(--header-height);
+  --circuit-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23ffc200' stroke-opacity='0.06' stroke-width='1'%3E%3Cpath d='M0 30h20M40 30h20M30 0v20M30 40v20'/%3E%3Ccircle cx='30' cy='30' r='3'/%3E%3C/g%3E%3C/svg%3E");
   /* Body: clean readable sans */
   --font-body: "Source Sans Pro", system-ui, sans-serif;
   /* Branding: esports display (Orbitron ≈ Ozeum/Rostave; Michroma ≈ Micro) */

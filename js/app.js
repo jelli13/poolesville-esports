@@ -1,14 +1,19 @@
 import { initAdminAuth } from "./admin-auth.js";
 import { syncAdminControls } from "./admin-controls.js";
 import { renderAdminGate } from "./topbar-admin.js";
+import { initHome } from "./home.js";
 
 initAdminAuth();
 renderAdminGate();
+initHome();
 
-const sidebar = document.getElementById("sidebar");
-const sidebarToggle = document.getElementById("sidebar-toggle");
+document.body.classList.remove("nav-open");
+
+const siteNav = document.getElementById("site-nav");
+const navToggle = document.getElementById("nav-toggle");
+const navBackdrop = document.getElementById("nav-backdrop");
 const mainNavButtons = document.querySelectorAll(
-  ".sidebar-nav > li > button[data-page], .nav-group > button[data-page]"
+  ".site-nav > ul > li > button[data-page], .nav-dropdown > button[data-page]"
 );
 const varsityTabButtons = document.querySelectorAll("[data-varsity-tab]");
 const clubTabButtons = document.querySelectorAll("[data-club-tab]");
@@ -21,48 +26,83 @@ const navGroupVarsity = document.getElementById("nav-group-varsity");
 const navGroupClub = document.getElementById("nav-group-club");
 const navGroupEvents = document.getElementById("nav-group-events");
 
+const mobileNavQuery = window.matchMedia("(max-width: 900px)");
+
 let highlightsReady = false;
 let scheduleReady = false;
 let playersReady = false;
-
-const sidebarMobileFab = document.getElementById("sidebar-mobile-fab");
-const mobileNavQuery = window.matchMedia("(max-width: 640px)");
 
 function isMobileNav() {
   return mobileNavQuery.matches;
 }
 
-function syncSidebarToggleState(collapsed) {
-  sidebarToggle?.setAttribute("aria-expanded", String(!collapsed));
-  sidebarToggle?.setAttribute(
-    "aria-label",
-    collapsed ? "Expand sidebar" : "Collapse sidebar"
-  );
-  sidebarMobileFab?.setAttribute("aria-expanded", String(!collapsed));
+function closeMobileNav() {
+  siteNav?.classList.remove("is-open");
+  navToggle?.setAttribute("aria-expanded", "false");
+  navToggle?.setAttribute("aria-label", "Open menu");
+  document.body.classList.remove("nav-open");
+  navBackdrop?.setAttribute("hidden", "");
 }
 
-function updateMobileSidebarFab() {
-  if (!sidebarMobileFab || !sidebar) return;
-  const showFab = isMobileNav() && sidebar.classList.contains("is-collapsed");
-  sidebarMobileFab.hidden = !showFab;
+function openMobileNav() {
+  siteNav?.classList.add("is-open");
+  navToggle?.setAttribute("aria-expanded", "true");
+  navToggle?.setAttribute("aria-label", "Close menu");
+  document.body.classList.add("nav-open");
+  navBackdrop?.removeAttribute("hidden");
 }
 
-function setSidebarCollapsed(collapsed) {
-  sidebar.classList.toggle("is-collapsed", collapsed);
-  syncSidebarToggleState(collapsed);
-  updateMobileSidebarFab();
+function closeAllDropdowns() {
+  document.querySelectorAll(".nav-dropdown.is-open").forEach((el) => {
+    el.classList.remove("is-open");
+  });
 }
 
-sidebarToggle?.addEventListener("click", () => {
-  setSidebarCollapsed(!sidebar.classList.contains("is-collapsed"));
+navToggle?.addEventListener("click", () => {
+  if (siteNav?.classList.contains("is-open")) {
+    closeMobileNav();
+    closeAllDropdowns();
+  } else {
+    openMobileNav();
+  }
 });
 
-sidebarMobileFab?.addEventListener("click", () => {
-  setSidebarCollapsed(false);
+navBackdrop?.addEventListener("click", () => {
+  closeMobileNav();
+  closeAllDropdowns();
 });
 
-mobileNavQuery.addEventListener("change", updateMobileSidebarFab);
-updateMobileSidebarFab();
+document.querySelectorAll(".nav-dropdown-toggle").forEach((btn) => {
+  btn.addEventListener("click", (event) => {
+    if (isMobileNav()) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    const dropdown = btn.closest(".nav-dropdown");
+    if (!dropdown) return;
+    const willOpen = !dropdown.classList.contains("is-open");
+    closeAllDropdowns();
+    if (willOpen) dropdown.classList.add("is-open");
+  });
+});
+
+document.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) return;
+  if (event.target.closest(".nav-dropdown") || event.target.closest(".nav-toggle")) return;
+  closeAllDropdowns();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeMobileNav();
+    closeAllDropdowns();
+  }
+});
+
+mobileNavQuery.addEventListener("change", () => {
+  closeMobileNav();
+  closeAllDropdowns();
+});
 
 async function showVarsityTab(tabId) {
   varsityPanels.forEach((panel) => {
@@ -136,12 +176,15 @@ function showPage(pageId, options = {}) {
   });
 
   syncNavGroups(pageId);
+  closeMobileNav();
+  closeAllDropdowns();
 
   if (pageId === "varsity") showVarsityTab(varsityTab);
   if (pageId === "club") showClubTab(clubTab);
   if (pageId === "events") showEventsTab(eventsTab);
 
   syncAdminControls();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 mainNavButtons.forEach((btn) => {
@@ -178,9 +221,20 @@ document.getElementById("full-schedule-link")?.addEventListener("click", (e) => 
   showPage("varsity", { varsityTab: "schedule" });
 });
 
+document.querySelectorAll("[data-go-varsity]").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    showPage("varsity", { varsityTab: el.dataset.goVarsity });
+  });
+});
+
+document.getElementById("brand-home")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  showPage("home");
+});
+
 showPage("home");
 
-// Admin UI loads after navigation is wired so a failure cannot brick the site
 import("./admin-ui.js")
   .then(({ initAdminUi }) => {
     initAdminUi();

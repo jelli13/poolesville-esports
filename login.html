@@ -7,19 +7,27 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="stylesheet" href="css/styles.css?v=12" />
+  <link rel="stylesheet" href="css/admin.css?v=9" />
 </head>
 <body class="login-page">
-  <header class="topbar">
-    <div id="admin-gate" class="topbar-admin-gate">
-      <a href="index.html" class="admin-gate-link">← Back to site</a>
-    </div>
-    <span class="topbar-brand">Poolesville Esports</span>
-  </header>
+  <div class="site-top login-top">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="header-brand" href="index.html">
+          <img src="assets/logo.svg" alt="" class="header-logo" width="44" height="44" />
+          <span class="header-brand-text">
+            <span class="header-brand-name">Falcon Esports</span>
+            <span class="header-brand-sub">Poolesville High School</span>
+          </span>
+        </a>
+        <a href="index.html" class="admin-gate-link login-back-link">← Back to site</a>
+      </div>
+    </header>
+  </div>
 
   <main class="login-main">
     <div id="login-lockout" class="login-card login-lockout" hidden>
