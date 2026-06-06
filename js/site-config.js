@@ -4,7 +4,7 @@
  */
 window.PHS_SITE_CONFIG = window.PHS_SITE_CONFIG || {
   apiBase: "",
-  interestFormUrl: "",
+  interestFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc0jjVdnKvH2-rG9U5RFWdStTonzbW7cramWzIyfkWg0aglSw/viewform",
   links: {
     discord: "https://discord.gg/",
     youtube: "https://www.youtube.com/@FalconEsportsLetsGo/videos",
