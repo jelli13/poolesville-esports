@@ -10,15 +10,19 @@
     href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="css/styles.css?v=33" />
+  <link rel="stylesheet" href="css/styles.css?v=36" />
   <link rel="stylesheet" href="css/admin.css?v=9" />
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1280&q=70" />
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1280&q=70" />
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1280&q=70" />
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=1280&q=70" />
 </head>
 <body>
   <div class="site-top">
     <header class="site-header">
       <div class="header-inner">
         <a class="header-brand" href="#" id="brand-home">
-          <img src="assets/logo.svg" alt="" class="header-logo" width="44" height="44" />
+          <img src="assets/logo.svg" alt="" class="header-logo" width="48" height="48" />
           <span class="header-brand-text">
             <span class="header-brand-name">Falcon Esports</span>
             <span class="header-brand-sub">Poolesville High School</span>
@@ -38,15 +42,22 @@
               <ul class="nav-dropdown-menu" aria-label="Varsity Team sections">
                 <li><button type="button" data-varsity-tab="schedule">Schedule</button></li>
                 <li><button type="button" data-varsity-tab="highlights">Game Highlights</button></li>
-                <li><button type="button" data-varsity-tab="players">2026 Varsity Team</button></li>
+                <li><button type="button" data-varsity-tab="players">Meet the Team</button></li>
+                <li><button type="button" data-varsity-tab="hall-of-fame">Hall of Fame</button></li>
                 <li><button type="button" data-varsity-tab="qualifications">Qualifications</button></li>
               </ul>
             </li>
             <li>
               <button type="button" data-page="club">Club</button>
             </li>
-            <li>
-              <button type="button" data-page="events">Events</button>
+            <li class="nav-dropdown" id="nav-group-events">
+              <button type="button" class="nav-dropdown-toggle" data-page="events" aria-haspopup="true">
+                Events
+                <span class="nav-chevron" aria-hidden="true"></span>
+              </button>
+              <ul class="nav-dropdown-menu" id="events-nav-menu" aria-label="Events sections">
+                <li><button type="button" data-event-tab="list">All Events</button></li>
+              </ul>
             </li>
             <li class="nav-dropdown" id="nav-group-about">
               <button type="button" class="nav-dropdown-toggle" data-page="about" aria-haspopup="true">
@@ -55,6 +66,7 @@
               </button>
               <ul class="nav-dropdown-menu" aria-label="About sections">
                 <li><button type="button" data-about-tab="what-is-esports">What is Esports?</button></li>
+                <li><button type="button" data-about-tab="contact">Contact Us</button></li>
               </ul>
             </li>
           </ul>
@@ -87,35 +99,39 @@
             <div class="hero-carousel-track" id="hero-carousel-track">
               <div class="hero-carousel-slide">
                 <img
-                  src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1920&q=80"
+                  src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1280&q=70"
                   alt=""
                   width="1920"
                   height="1080"
                   fetchpriority="high"
+                  loading="eager"
                 />
               </div>
               <div class="hero-carousel-slide">
                 <img
-                  src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1920&q=80"
+                  src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1280&q=70"
                   alt=""
                   width="1920"
                   height="1080"
+                  loading="eager"
                 />
               </div>
               <div class="hero-carousel-slide">
                 <img
-                  src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1920&q=80"
+                  src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1280&q=70"
                   alt=""
                   width="1920"
                   height="1080"
+                  loading="eager"
                 />
               </div>
               <div class="hero-carousel-slide">
                 <img
-                  src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=1920&q=80"
+                  src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=1280&q=70"
                   alt=""
                   width="1920"
                   height="1080"
+                  loading="eager"
                 />
               </div>
             </div>
@@ -150,6 +166,7 @@
             <table>
               <thead>
                 <tr>
+                  <th>Week</th>
                   <th>Date</th>
                   <th>Opponent</th>
                   <th>Status</th>
@@ -236,6 +253,10 @@
             </table>
           </div>
           <div class="schedule-admin-actions">
+            <label id="current-week-control" class="current-week-control admin-only" hidden>
+              <span>Current week</span>
+              <select id="current-week-select" aria-label="Current competition week"></select>
+            </label>
             <button type="button" id="btn-edit-schedule" class="btn-admin admin-only" hidden>Edit Schedule</button>
             <button type="button" id="btn-add-schedule-row" class="btn-admin btn-admin-outline admin-only" hidden>Add row</button>
           </div>
@@ -313,8 +334,8 @@
       <div id="varsity-players" class="varsity-panel">
         <header class="page-header">
           <div class="page-header-inner">
-            <h1 class="page-header-title">2026 Varsity Team</h1>
-            <p class="page-header-breadcrumb">Varsity Team › 2026 Varsity Team</p>
+            <h1 class="page-header-title">Meet the Team</h1>
+            <p class="page-header-breadcrumb">Varsity Team › Meet the Team</p>
           </div>
         </header>
         <div class="page-content">
@@ -326,6 +347,19 @@
             <p class="teams-cta-text">Want to join the 2026–27 roster?</p>
             <button type="button" class="btn btn-primary" data-go-varsity="qualifications">View Qualifications →</button>
           </div>
+        </div>
+      </div>
+
+      <div id="varsity-hall-of-fame" class="varsity-panel">
+        <header class="page-header">
+          <div class="page-header-inner">
+            <h1 class="page-header-title">Hall of Fame</h1>
+            <p class="page-header-breadcrumb">Varsity Team › Hall of Fame</p>
+          </div>
+        </header>
+        <div class="page-content">
+          <p class="hof-intro">Former varsity players who helped build Falcon Esports.</p>
+          <div id="hall-of-fame-content" class="hall-of-fame-content" aria-label="Alumni by year"></div>
         </div>
       </div>
 
@@ -383,7 +417,7 @@
             <span class="club-feature-icon" aria-hidden="true">🎮</span>
             <h3 class="club-feature-title">Open Tournaments</h3>
             <p>Compete in school-wide open tournaments like the NBA 2K Tournament.</p>
-            <button type="button" class="btn btn-primary" data-page-link="events">See Events →</button>
+            <button type="button" class="btn btn-primary" data-go-event="nba-2k-2026">See Events →</button>
           </article>
           <article class="club-feature-card">
             <span class="club-feature-icon" aria-hidden="true">🤝</span>
@@ -398,50 +432,18 @@
 
     <!-- Events -->
     <div id="page-events" class="page page-events">
-      <header class="page-header">
-        <div class="page-header-inner">
-          <h1 class="page-header-title">Events</h1>
-          <p class="page-header-breadcrumb">Events</p>
-        </div>
-      </header>
-      <div class="page-content">
-        <div class="events-grid">
-          <article class="event-card">
-            <!-- IMAGE PLACEHOLDER: Event Banner — NBA 2K26 Tournament Logo — swap with <img> when assets are ready -->
-            <div class="img-placeholder img-placeholder--event-banner">
-              <span>📷 Event Banner — NBA 2K26 Tournament Logo</span>
-            </div>
-            <div class="event-card-body">
-              <h2 class="event-card-title">NBA 2K TOURNAMENT</h2>
-              <p class="event-card-desc">
-                Open to all PHS students. Come compete in our school-wide NBA 2K tournament — no experience required.
-              </p>
-              <span class="event-card-status">COMING SOON</span>
-              <a
-                class="btn btn-primary"
-                href="https://new.express.adobe.com/webpage/LBAd74oUlTuPM"
-                target="_blank"
-                rel="noopener noreferrer"
-              >More Info &amp; Sign Up →</a>
-            </div>
-          </article>
-          <article class="event-card">
-            <!-- IMAGE PLACEHOLDER: Future Event Banner — TBD — swap with <img> when assets are ready -->
-            <div class="img-placeholder img-placeholder--event-banner">
-              <span>📷 Future Event Banner — TBD</span>
-            </div>
-            <div class="event-card-body">
-              <h2 class="event-card-title">MORE EVENTS COMING</h2>
-              <p class="event-card-desc">
-                Check back for upcoming tournaments, scrimmages, and community gaming nights.
-              </p>
-              <span class="event-card-status">STAY TUNED</span>
-              <!-- TODO: insert Discord invite link -->
-              <a class="btn btn-primary" href="#" id="events-discord-link">Join Discord for Updates →</a>
-            </div>
-          </article>
+      <div id="events-list" class="event-panel is-active">
+        <header class="page-header">
+          <div class="page-header-inner">
+            <h1 class="page-header-title">Events</h1>
+            <p class="page-header-breadcrumb">Events</p>
+          </div>
+        </header>
+        <div class="page-content">
+          <div class="events-grid" id="events-grid"></div>
         </div>
       </div>
+      <div id="event-detail" class="event-panel" aria-live="polite"></div>
     </div>
 
     <!-- About -->
@@ -478,23 +480,11 @@
                     <span class="value-prop-desc">Collegiate esports pathways nationwide</span>
                   </div>
                 </div>
-
-                <div class="about-qa-list">
-                  <div class="about-qa">
-                    <h2 class="about-qa-question" id="what-is-esports">What is Esports and how is it different from casual gaming?</h2>
-                    <p class="about-qa-answer">If you make the varsity Esports roster, it requires the same level of dedication and teamwork expected from players of a physical sport. If you make the junior varsity roster, you are working towards earning a varsity roster spot and supporting the program. Instead of physical acumen, the sport requires fine motor skills, mental toughness, creativity, communication, and collaboration.</p>
-                  </div>
-                  <div class="about-qa">
-                    <h2 class="about-qa-question">Why Esports? What can I get out of it?</h2>
-                    <p class="about-qa-answer">Over 200 colleges and universities belong to the National Association of Collegiate Esports, have a collegiate esports team, and give scholarships ranging from $500 to $10,000 (the average is $2,000). Professional esports teams compete for six-figure prize pools. For example, participants in the 2024 Rocket League Championship Series played for a share of a $1.16 million prize pool with the winner (Team BDS) walking away with a $300,000 grand prize.</p>
-                  </div>
-                </div>
               </div>
 
               <div class="about-visual">
-                <!-- IMAGE PLACEHOLDER: Esports Gaming Setup Photo — swap with <img> when assets are ready -->
                 <div class="img-placeholder img-placeholder--about-photo">
-                  <span>📷 Esports Gaming Setup Photo</span>
+                  <span>Esports photo coming soon</span>
                 </div>
               </div>
             </div>
@@ -517,7 +507,54 @@
                 <span class="stat-label">Week Season</span>
               </div>
             </div>
+
+            <div class="faq-list about-faq" aria-label="Frequently asked questions">
+              <details class="faq-item">
+                <summary>What is Esports and how is it different from casual gaming?</summary>
+                <p class="faq-answer">If you make the varsity Esports roster, it requires the same level of dedication and teamwork expected from players of a physical sport. If you make the junior varsity roster, you are working towards earning a varsity roster spot and supporting the program. Instead of physical acumen, the sport requires fine motor skills, mental toughness, creativity, communication, and collaboration.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Why Esports? What can I get out of it?</summary>
+                <p class="faq-answer">Over 200 colleges and universities belong to the National Association of Collegiate Esports, have a collegiate esports team, and give scholarships ranging from $500 to $10,000 (the average is $2,000). Professional esports teams compete for six-figure prize pools. For example, participants in the 2024 Rocket League Championship Series played for a share of a $1.16 million prize pool with the winner (Team BDS) walking away with a $300,000 grand prize.</p>
+              </details>
+            </div>
           </section>
+        </div>
+      </div>
+
+      <div id="about-contact" class="about-panel">
+        <header class="page-header">
+          <div class="page-header-inner">
+            <h1 class="page-header-title">Contact Us</h1>
+            <p class="page-header-breadcrumb">About › Contact Us</p>
+          </div>
+        </header>
+        <div class="page-content">
+          <p class="contact-intro">Reach out to coaches, team leadership, or join the community on Discord.</p>
+          <div class="contact-grid">
+            <article class="contact-card">
+              <span class="contact-card-icon" aria-hidden="true">✉️</span>
+              <h2 class="contact-card-title" id="contact-coach-name">Mr. Ryan Broome</h2>
+              <p class="contact-card-role" id="contact-coach-title">Coach &amp; Faculty Sponsor</p>
+              <a class="contact-card-link" id="contact-coach-email" href="mailto:Ryan_J_Broome@mcpsmd.org">Ryan_J_Broome@mcpsmd.org</a>
+            </article>
+            <article class="contact-card">
+              <span class="contact-card-icon" aria-hidden="true">📋</span>
+              <h2 class="contact-card-title" id="contact-manager-name">Varsity Team Manager</h2>
+              <p class="contact-card-role">Team operations &amp; scheduling</p>
+              <a class="contact-card-link" id="contact-manager-email" href="mailto:falconesports.phs@gmail.com">falconesports.phs@gmail.com</a>
+            </article>
+            <article class="contact-card">
+              <span class="contact-card-icon contact-card-icon--discord" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path fill="currentColor" d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.37-.76-.54-1.09A.09.09 0 0 0 8.99 4c-1.5.26-2.94.71-4.27 1.33A.08.08 0 0 0 4.55 6.6C2.56 9.78 2.04 12.86 2.25 15.89a.09.09 0 0 0 .04.06c1.89 1.39 3.72 2.23 5.5 2.8a.09.09 0 0 0 .1-.03c.42-.58.8-1.19 1.13-1.83a.09.09 0 0 0-.05-.12 10.63 10.63 0 0 1-1.52-.72.09.09 0 0 1-.01-.15c.13-.09.25-.2.37-.29a.09.09 0 0 1 .09 0c3.19 1.48 6.64 1.48 9.79 0a.09.09 0 0 1 .09 0c.12.1.24.2.37.29a.09.09 0 0 1-.01.15 10.47 10.47 0 0 1-1.53.73.09.09 0 0 0-.04.12c.34.64.72 1.25 1.13 1.83a.09.09 0 0 0 .1.03c1.79-.57 3.62-1.41 5.51-2.8a.09.09 0 0 0 .04-.06c.28-3.54-.58-6.59-2.21-9.56a.08.08 0 0 0-.04-.03zM8.04 13.86c-.97 0-1.77-.9-1.77-2s.79-2 1.77-2 1.78.9 1.77 2-.8 2-1.77 2zm7.92 0c-.97 0-1.77-.9-1.77-2s.79-2 1.77-2 1.78.9 1.77 2-.8 2-1.77 2z"/>
+                </svg>
+              </span>
+              <h2 class="contact-card-title">Discord</h2>
+              <p class="contact-card-role" id="contact-discord-label">PHS Esports Discord</p>
+              <a class="contact-card-link" id="contact-page-discord" href="#" target="_blank" rel="noopener noreferrer">Join the server →</a>
+            </article>
+          </div>
         </div>
       </div>
     </div>
@@ -528,20 +565,49 @@
       <div class="footer-brand">
         <img src="assets/logo.svg" alt="" width="40" height="40" />
         <div>
-          <p class="footer-name">Poolesville High School Esports</p>
+          <p class="footer-name">Falcon Esports</p>
           <p class="footer-tagline">Compete. Represent. Dominate.</p>
         </div>
       </div>
       <div class="footer-links">
         <a id="footer-phs" href="https://www.montgomeryschoolsmd.org/schools/poolesvillehs/" target="_blank" rel="noopener noreferrer"><span class="footer-link-long">Poolesville HS</span><span class="footer-link-short">PHS</span></a>
-        <a id="footer-email" href="mailto:Ryan_J_Broome@mcpsmd.org"><span class="footer-link-long">Contact Us</span><span class="footer-link-short">Contact</span></a>
+        <a id="footer-contact-link" href="#"><span class="footer-link-long">Contact Us</span><span class="footer-link-short">Contact</span></a>
         <a id="footer-discord" href="#" target="_blank" rel="noopener noreferrer">Discord</a>
         <a id="footer-youtube" href="#" target="_blank" rel="noopener noreferrer">YouTube</a>
         <span id="admin-gate-footer" class="footer-staff-gate" aria-live="polite"></span>
       </div>
-      <p class="footer-copy">&copy; 2026 Poolesville High School Esports</p>
+      <p class="footer-copy">&copy; 2026 Falcon Esports</p>
     </div>
   </footer>
+
+  <div id="player-modal" class="modal" hidden aria-hidden="true" role="dialog" aria-labelledby="player-modal-title">
+    <button type="button" class="modal-backdrop" aria-label="Close"></button>
+    <div class="modal-panel player-modal-panel">
+      <h2 id="player-modal-title" class="add-clip-dialog-title">Add player</h2>
+      <form id="player-form" class="player-form">
+        <label class="login-field player-form-field">
+          <span>Photo URL</span>
+          <input type="url" id="player-photo-url" name="photoUrl" placeholder="https://…" />
+        </label>
+        <label class="login-field player-form-field">
+          <span>Gamertag</span>
+          <input type="text" id="player-name" name="name" placeholder="In-game name" required />
+        </label>
+        <label class="login-field player-form-field">
+          <span>Real name</span>
+          <input type="text" id="player-real-name" name="realName" placeholder="First name or full name" />
+        </label>
+        <label class="login-field player-form-field">
+          <span>Short bio</span>
+          <textarea id="player-bio" name="bio" rows="3" placeholder="Role, year, fun fact…"></textarea>
+        </label>
+        <div class="player-form-actions">
+          <button type="button" class="btn-admin btn-admin-outline" id="btn-cancel-player">Cancel</button>
+          <button type="submit" class="btn-login">Save player</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <div id="add-clip-modal" class="modal" hidden aria-hidden="true" role="dialog" aria-labelledby="add-clip-title">
     <button type="button" class="modal-backdrop" aria-label="Close"></button>
@@ -578,6 +644,6 @@
   </div>
 
   <script src="js/site-config.js"></script>
-  <script src="js/app.js?v=19" type="module"></script>
+  <script src="js/app.js?v=22" type="module"></script>
 </body>
 </html>

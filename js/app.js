@@ -1,7 +1,7 @@
 import { initAdminAuth } from "./admin-auth.js";
 import { syncAdminControls } from "./admin-controls.js";
 import { renderAdminGate } from "./topbar-admin.js";
-import { initHome } from "./home.js";
+import { initHome, warmHeroImages } from "./home.js";
 
 initAdminAuth();
 renderAdminGate();
@@ -22,12 +22,15 @@ const varsityPanels = document.querySelectorAll(".varsity-panel");
 const aboutPanels = document.querySelectorAll(".about-panel");
 const navGroupVarsity = document.getElementById("nav-group-varsity");
 const navGroupAbout = document.getElementById("nav-group-about");
+const navGroupEvents = document.getElementById("nav-group-events");
 
 const mobileNavQuery = window.matchMedia("(max-width: 900px)");
 
 let highlightsReady = false;
 let scheduleReady = false;
 let playersReady = false;
+let hallOfFameReady = false;
+let eventsReady = false;
 
 function isMobileNav() {
   return mobileNavQuery.matches;
@@ -125,8 +128,14 @@ async function showVarsityTab(tabId) {
 
   if (tabId === "players" && !playersReady) {
     playersReady = true;
-    const { initPlayers } = await import("./players.js");
+    const { initPlayers } = await import("./players.js?v=4");
     initPlayers();
+  }
+
+  if (tabId === "hall-of-fame" && !hallOfFameReady) {
+    hallOfFameReady = true;
+    const { initHallOfFame } = await import("./hall-of-fame.js");
+    initHallOfFame();
   }
 }
 
@@ -136,12 +145,34 @@ function showAboutTab(tabId) {
   });
 }
 
+async function showEventsView({ eventTab = "list" } = {}) {
+  if (!eventsReady) {
+    eventsReady = true;
+    const { initEvents, showEventById, showEventsList } = await import("./events.js?v=3");
+    await initEvents();
+    if (eventTab && eventTab !== "list") {
+      showEventById(eventTab);
+    } else {
+      showEventsList();
+    }
+    return;
+  }
+
+  const { showEventById, showEventsList } = await import("./events.js?v=3");
+  if (eventTab && eventTab !== "list") {
+    showEventById(eventTab);
+  } else {
+    showEventsList();
+  }
+}
+
 function syncNavGroups(pageId) {
   navGroupVarsity?.classList.toggle("is-expanded", pageId === "varsity");
   navGroupAbout?.classList.toggle("is-expanded", pageId === "about");
+  navGroupEvents?.classList.toggle("is-expanded", pageId === "events");
 }
 
-function syncSubtabNav(pageId, { varsityTab, aboutTab }) {
+function syncSubtabNav(pageId, { varsityTab, aboutTab, eventTab } = {}) {
   varsityTabButtons.forEach((btn) => {
     btn.classList.toggle(
       "is-active",
@@ -155,10 +186,29 @@ function syncSubtabNav(pageId, { varsityTab, aboutTab }) {
       pageId === "about" && btn.dataset.aboutTab === aboutTab
     );
   });
+
+  const detailOpen = document.getElementById("event-detail")?.classList.contains("is-active");
+
+  document.querySelectorAll("[data-event-tab]").forEach((btn) => {
+    const tab = btn.dataset.eventTab;
+    let active = false;
+    if (pageId === "events") {
+      if (detailOpen && eventTab && eventTab !== "list") {
+        active = tab === eventTab;
+      } else if (!detailOpen) {
+        active = tab === "list";
+      }
+    }
+    btn.classList.toggle("is-active", active);
+  });
 }
 
-function showPage(pageId, options = {}) {
-  const { varsityTab = "schedule", aboutTab = "what-is-esports" } = options;
+async function showPage(pageId, options = {}) {
+  const {
+    varsityTab = "schedule",
+    aboutTab = "what-is-esports",
+    eventTab = "list",
+  } = options;
 
   pages.forEach((page) => {
     page.classList.toggle("is-active", page.id === `page-${pageId}`);
@@ -174,8 +224,11 @@ function showPage(pageId, options = {}) {
 
   if (pageId === "varsity") showVarsityTab(varsityTab);
   if (pageId === "about") showAboutTab(aboutTab);
+  if (pageId === "events") await showEventsView({ eventTab });
 
-  syncSubtabNav(pageId, { varsityTab, aboutTab });
+  syncSubtabNav(pageId, { varsityTab, aboutTab, eventTab });
+
+  if (pageId === "home") warmHeroImages();
 
   syncAdminControls();
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -187,6 +240,7 @@ mainNavButtons.forEach((btn) => {
     const options = {};
     if (pageId === "varsity") options.varsityTab = "schedule";
     if (pageId === "about") options.aboutTab = "what-is-esports";
+    if (pageId === "events") options.eventTab = "list";
     showPage(pageId, options);
   });
 });
@@ -201,6 +255,13 @@ aboutTabButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     showPage("about", { aboutTab: btn.dataset.aboutTab });
   });
+});
+
+document.getElementById("events-nav-menu")?.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-event-tab]");
+  if (!btn) return;
+  e.preventDefault();
+  showPage("events", { eventTab: btn.dataset.eventTab });
 });
 
 document.querySelectorAll("[data-go-varsity]").forEach((el) => {
@@ -222,9 +283,33 @@ document.querySelectorAll("[data-page-link]").forEach((el) => {
   });
 });
 
+document.querySelectorAll("[data-go-event]").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    showPage("events", { eventTab: el.dataset.goEvent });
+  });
+});
+
+document.getElementById("footer-contact-link")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  showPage("about", { aboutTab: "contact" });
+});
+
 document.getElementById("brand-home")?.addEventListener("click", (e) => {
   e.preventDefault();
   showPage("home");
+});
+
+window.addEventListener("phs:show-event", (e) => {
+  syncSubtabNav("events", { eventTab: e.detail?.eventId ?? "list" });
+});
+
+window.addEventListener("phs:show-events-list", () => {
+  syncSubtabNav("events", { eventTab: "list" });
+});
+
+window.addEventListener("phs:events-updated", (e) => {
+  syncSubtabNav("events", { eventTab: e.detail?.eventId ?? "list" });
 });
 
 showPage("home");

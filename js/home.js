@@ -1,4 +1,4 @@
-import { loadSchedule } from "./data-store.js";
+import { loadSchedule, loadSiteSettings } from "./data-store.js";
 
 function escapeHtml(str) {
   return String(str)
@@ -9,11 +9,16 @@ function escapeHtml(str) {
 }
 
 function wireContactLinks() {
-  const { links = {} } = window.PHS_SITE_CONFIG ?? {};
+  const { links = {}, contacts = {} } = window.PHS_SITE_CONFIG ?? {};
 
   const setHref = (id, url) => {
     const el = document.getElementById(id);
     if (el && url) el.href = url;
+  };
+
+  const setText = (id, text) => {
+    const el = document.getElementById(id);
+    if (el && text) el.textContent = text;
   };
 
   setHref("contact-discord", links.discord);
@@ -21,9 +26,25 @@ function wireContactLinks() {
   setHref("footer-discord", links.discord);
   setHref("footer-youtube", links.youtube);
   setHref("footer-phs", links.phs);
-  setHref("footer-email", links.email);
   setHref("club-discord-link", links.discord);
-  setHref("events-discord-link", links.discord);
+  setHref("contact-page-discord", links.discord);
+
+  setText("contact-coach-name", contacts.coachName);
+  setText("contact-coach-title", contacts.coachTitle);
+  setText("contact-manager-name", contacts.teamManagerName);
+  setText("contact-discord-label", contacts.discordLabel);
+
+  if (contacts.coachEmail) {
+    setHref("contact-coach-email", `mailto:${contacts.coachEmail}`);
+    const coachEmail = document.getElementById("contact-coach-email");
+    if (coachEmail) coachEmail.textContent = contacts.coachEmail;
+  }
+
+  if (contacts.teamManagerEmail) {
+    setHref("contact-manager-email", `mailto:${contacts.teamManagerEmail}`);
+    const managerEmail = document.getElementById("contact-manager-email");
+    if (managerEmail) managerEmail.textContent = contacts.teamManagerEmail;
+  }
 }
 
 function interestFormEmbedUrl(viewformUrl) {
@@ -32,20 +53,32 @@ function interestFormEmbedUrl(viewformUrl) {
   return `${url}${url.includes("?") ? "&" : "?"}embedded=true`;
 }
 
+function warmHeroImages() {
+  document.querySelectorAll("#hero-carousel-track img").forEach((img) => {
+    if (!img.src) return;
+    if (img.complete && img.naturalWidth > 0) return;
+    const cached = new Image();
+    cached.src = img.src;
+  });
+}
+
 function initHeroCarousel() {
   const track = document.getElementById("hero-carousel-track");
   if (!track) return;
+
+  warmHeroImages();
 
   const slides = track.querySelectorAll(".hero-carousel-slide");
   if (slides.length < 2) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const firstClone = slides[0].cloneNode(true);
+  const firstClone = track.querySelector(".hero-carousel-slide")?.cloneNode(true);
+  if (!firstClone) return;
   firstClone.setAttribute("aria-hidden", "true");
   track.appendChild(firstClone);
 
   let index = 0;
-  const slideCount = slides.length;
+  const slideCount = track.querySelectorAll(".hero-carousel-slide").length - 1;
 
   const advance = () => {
     index += 1;
@@ -95,16 +128,23 @@ function wireInterestForm() {
   section.hidden = false;
 }
 
-async function populateHomeSchedule() {
+function weekIndex(rows, currentWeek) {
+  const target = String(currentWeek ?? "").trim().toLowerCase();
+  if (!target) return 0;
+  const idx = rows.findIndex((row) => String(row.week ?? "").trim().toLowerCase() === target);
+  return idx >= 0 ? idx : 0;
+}
+
+export async function populateHomeSchedule() {
   const section = document.getElementById("home-schedule-section");
   const tbody = document.getElementById("home-schedule-tbody");
   if (!section || !tbody) return;
 
   try {
-    const rows = await loadSchedule();
-    const upcoming = rows.filter(
+    const [rows, settings] = await Promise.all([loadSchedule(), loadSiteSettings()]);
+    const start = weekIndex(rows, settings?.currentWeek);
+    const upcoming = rows.slice(start).filter(
       (row) =>
-        String(row.result).trim().toUpperCase() === "TBD" &&
         !String(row.week).toLowerCase().includes("bye") &&
         String(row.opponent).trim().toUpperCase() !== "TBD" &&
         String(row.opponent).trim() !== "—"
@@ -117,14 +157,24 @@ async function populateHomeSchedule() {
 
     tbody.innerHTML = upcoming
       .slice(0, 4)
-      .map(
-        (row) => `
+      .map((row) => {
+        const result = String(row.result ?? "").trim().toUpperCase();
+        const status =
+          result === "TBD" || result === "—" || result === ""
+            ? "Upcoming"
+            : result === "W"
+              ? "Win"
+              : result === "L"
+                ? "Loss"
+                : escapeHtml(row.result ?? "");
+        return `
       <tr>
-        <td>${escapeHtml(row.date ?? row.week ?? "")}</td>
+        <td>${escapeHtml(row.week ?? "")}</td>
+        <td>${escapeHtml(row.date ?? "")}</td>
         <td>${escapeHtml(row.opponent ?? "")}</td>
-        <td>Upcoming</td>
-      </tr>`
-      )
+        <td>${status}</td>
+      </tr>`;
+      })
       .join("");
 
     section.hidden = false;
@@ -141,4 +191,4 @@ export async function initHome() {
   await populateHomeSchedule();
 }
 
-export { escapeHtml };
+export { escapeHtml, warmHeroImages };

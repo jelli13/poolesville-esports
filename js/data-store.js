@@ -95,19 +95,47 @@ export async function saveSchedule(rows) {
 }
 
 export async function loadPlayers() {
-  const saved = localStorage.getItem(KEYS.PLAYERS);
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch {
-      /* fall through */
+  try {
+    return await fetchPublicJson("/api/players", "data/players.json");
+  } catch {
+    const saved = localStorage.getItem(KEYS.PLAYERS);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        /* fall through */
+      }
     }
+    throw new Error("Could not load players");
   }
-  const res = await fetch("data/players.json");
-  if (!res.ok) throw new Error("Could not load players");
-  return res.json();
 }
 
-export function savePlayers(data) {
+export async function savePlayers(data) {
+  try {
+    await postAdminJson("/api/players", data);
+  } catch (err) {
+    localStorage.setItem(KEYS.PLAYERS, JSON.stringify(data));
+    throw err;
+  }
   localStorage.setItem(KEYS.PLAYERS, JSON.stringify(data));
+}
+
+export async function loadSiteSettings() {
+  return fetchPublicJson("/api/settings", "data/site-settings.json");
+}
+
+export async function saveSiteSettings(settings) {
+  await postAdminJson("/api/settings", settings);
+}
+
+export async function loadEvents() {
+  return fetchPublicJson("/api/events", "data/events.json");
+}
+
+export async function saveEvents(items) {
+  await postAdminJson("/api/events", items);
+}
+
+export async function loadHallOfFame() {
+  return fetchPublicJson("/api/hall-of-fame", "data/hall-of-fame.json");
 }

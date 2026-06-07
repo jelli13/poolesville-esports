@@ -124,6 +124,78 @@ app.post("/api/highlights", requireAdmin, async (req, res) => {
   }
 });
 
+app.get("/api/players", async (_req, res) => {
+  try {
+    const data = await readJsonFile("players.json");
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not read players" });
+  }
+});
+
+app.post("/api/players", requireAdmin, async (req, res) => {
+  try {
+    const data = req.body?.data ?? req.body;
+    if (!data || !Array.isArray(data.players)) {
+      return res.status(400).json({ error: "Players must be { players: [] }" });
+    }
+    await writeJsonFile("players.json", data);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not save players" });
+  }
+});
+
+app.get("/api/settings", async (_req, res) => {
+  try {
+    const data = await readJsonFile("site-settings.json");
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not read settings" });
+  }
+});
+
+app.post("/api/settings", requireAdmin, async (req, res) => {
+  try {
+    const data = req.body?.data ?? req.body;
+    if (!data || typeof data !== "object") {
+      return res.status(400).json({ error: "Settings must be an object" });
+    }
+    await writeJsonFile("site-settings.json", data);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not save settings" });
+  }
+});
+
+app.get("/api/events", async (_req, res) => {
+  try {
+    const data = await readJsonFile("events.json");
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not read events" });
+  }
+});
+
+app.post("/api/events", requireAdmin, async (req, res) => {
+  try {
+    const data = req.body?.data ?? req.body;
+    if (!Array.isArray(data)) {
+      return res.status(400).json({ error: "Events must be an array" });
+    }
+    await writeJsonFile("events.json", data);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not save events" });
+  }
+});
+
 app.get("/health", (_req, res) => {
   res.type("text/plain").send("ok");
 });
@@ -132,5 +204,7 @@ app.use(express.static(ROOT));
 
 app.listen({ port: PORT, host: "::", ipv6Only: false }, () => {
   console.log(`Poolesville Esports site: http://127.0.0.1:${PORT}`);
-  console.log("Admin saves update data/schedule.json and data/highlights.json for all visitors.");
+  console.log(
+    "Admin saves update data/schedule.json, highlights.json, players.json, and site-settings.json."
+  );
 });

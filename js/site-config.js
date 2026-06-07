@@ -15,4 +15,12 @@ window.PHS_SITE_CONFIG = window.PHS_SITE_CONFIG || {
     phs: "https://www.montgomeryschoolsmd.org/schools/poolesvillehs/",
     email: "mailto:Ryan_J_Broome@mcpsmd.org",
   },
+  contacts: {
+    coachName: "Mr. Ryan Broome",
+    coachTitle: "Coach & Faculty Sponsor",
+    coachEmail: "Ryan_J_Broome@mcpsmd.org",
+    teamManagerName: "Varsity Team Manager",
+    teamManagerEmail: "falconesports.phs@gmail.com",
+    discordLabel: "PHS Esports Discord",
+  },
 };

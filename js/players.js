@@ -5,54 +5,44 @@ import { escapeHtml } from "./home.js";
 
 let players = [];
 let editMode = false;
+let editingIndex = null;
 
-const PLACEHOLDER_COUNT = 6;
-
-function normalizePlayersData(data) {
-  if (Array.isArray(data?.players) && data.players.length) return data.players;
-  return [];
-}
-
-function renderPlaceholderCards() {
-  return Array.from({ length: PLACEHOLDER_COUNT }, () => `
-    <!-- TODO: Replace with actual player gamertag and role -->
-    <article class="player-card">
-      <!-- IMAGE PLACEHOLDER: Player Avatar — TBD — swap with <img> when assets are ready -->
-      <div class="img-placeholder img-placeholder--avatar" aria-hidden="true">
-        <span>📷 Player Avatar — TBD</span>
-      </div>
-      <p class="player-gamertag-gold">—</p>
-      <span class="player-role">Rocket League — Varsity</span>
-    </article>`).join("");
+function playerId() {
+  return `p-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 function renderPlayerCard(player, index) {
-  const gamertag = escapeHtml(player.gamertag || player.name || "TBD");
-  const role = escapeHtml(player.role || "Rocket League — Varsity");
+  const gamertag = escapeHtml(player.name || "Player");
+  const realName = escapeHtml(player.realName || "");
+  const bio = escapeHtml(player.bio || "");
+  const photoUrl = player.photoUrl?.trim();
+
+  const avatar = photoUrl
+    ? `<img class="player-photo" src="${escapeHtml(photoUrl)}" alt="" loading="lazy" />`
+    : `<div class="player-photo player-photo--placeholder" aria-hidden="true"><span>${gamertag.charAt(0)}</span></div>`;
+
+  const nameBlock = `
+    <p class="player-name">${gamertag}</p>
+    ${realName ? `<p class="player-real-name">${realName}</p>` : ""}`;
 
   if (editMode) {
     return `
       <article class="player-card player-card--editing" data-player-index="${index}">
-        <label class="player-edit-field">
-          <span>Gamertag</span>
-          <input type="text" class="player-edit-gamertag" value="${gamertag}" />
-        </label>
-        <label class="player-edit-field">
-          <span>Role</span>
-          <input type="text" class="player-edit-role" value="${role}" />
-        </label>
-        <button type="button" class="player-remove-btn" data-player-index="${index}">Remove</button>
+        ${avatar}
+        ${nameBlock}
+        ${bio ? `<p class="player-bio">${bio}</p>` : ""}
+        <div class="player-edit-actions">
+          <button type="button" class="btn-admin btn-admin-outline player-edit-btn" data-edit-index="${index}">Edit</button>
+          <button type="button" class="player-remove-btn" data-player-index="${index}">Remove</button>
+        </div>
       </article>`;
   }
 
   return `
     <article class="player-card">
-      <!-- IMAGE PLACEHOLDER: Player Avatar — ${gamertag} — swap with <img> when assets are ready -->
-      <div class="img-placeholder img-placeholder--avatar" aria-hidden="true">
-        <span>📷 Player Avatar — ${gamertag}</span>
-      </div>
-      <p class="player-gamertag-gold">${gamertag}</p>
-      <span class="player-role">${role}</span>
+      ${avatar}
+      ${nameBlock}
+      ${bio ? `<p class="player-bio">${bio}</p>` : ""}
     </article>`;
 }
 
@@ -60,53 +50,122 @@ function renderPlayers() {
   const content = document.getElementById("players-content");
   if (!content) return;
 
-  const cards =
+  const gridContent =
     players.length > 0
-      ? players.map((player, index) => renderPlayerCard(player, index)).join("")
-      : renderPlaceholderCards();
+      ? `<div class="player-grid">${players.map((player, index) => renderPlayerCard(player, index)).join("")}</div>`
+      : "";
 
-  content.innerHTML = `
-    <div class="player-grid">
-      ${cards}
-    </div>
-    ${
-      editMode
-        ? '<button type="button" id="btn-add-player" class="btn-admin btn-admin-outline">Add player</button>'
-        : ""
-    }`;
+  const emptyMessage =
+    players.length === 0
+      ? '<p class="players-empty-note placeholder-text">Roster coming soon — check back after tryouts.</p>'
+      : "";
 
+  const adminBar = editMode
+    ? `<div class="players-admin-bar">
+        ${emptyMessage}
+        <div class="players-admin-actions">
+          <button type="button" id="btn-add-player" class="btn-admin btn-admin-outline">Add player</button>
+          <button type="button" id="btn-save-players" class="btn-admin">Save players</button>
+        </div>
+      </div>`
+    : "";
+
+  content.innerHTML = `${gridContent}${adminBar}`;
   content.classList.toggle("players-editing", editMode);
 
   content.querySelectorAll(".player-remove-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const index = Number(btn.dataset.playerIndex);
-      readPlayersFromDom();
+      if (!confirm("Remove this player from the roster?")) return;
       players.splice(index, 1);
       renderPlayers();
     });
   });
 
+  content.querySelectorAll(".player-edit-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      openPlayerModal(Number(btn.dataset.editIndex));
+    });
+  });
+
   document.getElementById("btn-add-player")?.addEventListener("click", () => {
-    readPlayersFromDom();
-    players.push({ name: "NewPlayer", gamertag: "NewPlayer", role: "Rocket League — Varsity" });
-    renderPlayers();
+    openPlayerModal(null);
+  });
+
+  document.getElementById("btn-save-players")?.addEventListener("click", async () => {
+    try {
+      await savePlayers({ players });
+      editMode = false;
+      const editBtn = document.getElementById("btn-edit-players");
+      if (editBtn) editBtn.textContent = "Edit players";
+      renderPlayers();
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Could not save players.");
+    }
   });
 }
 
-function readPlayersFromDom() {
-  const content = document.getElementById("players-content");
-  if (!content || !editMode) return players;
+function openPlayerModal(index) {
+  const modal = document.getElementById("player-modal");
+  const form = document.getElementById("player-form");
+  if (!modal || !form) return;
 
-  players = [...content.querySelectorAll(".player-card--editing")].map((card) => {
-    const gamertag = card.querySelector(".player-edit-gamertag")?.value.trim() ?? "";
-    return {
-      name: gamertag,
-      gamertag,
-      role: card.querySelector(".player-edit-role")?.value.trim() ?? "Rocket League — Varsity",
+  editingIndex = index;
+  const player = index != null ? players[index] : { name: "", realName: "", bio: "", photoUrl: "" };
+
+  form.querySelector("#player-photo-url").value = player.photoUrl ?? "";
+  form.querySelector("#player-name").value = player.name ?? "";
+  form.querySelector("#player-real-name").value = player.realName ?? "";
+  form.querySelector("#player-bio").value = player.bio ?? "";
+
+  document.getElementById("player-modal-title").textContent =
+    index != null ? "Edit player" : "Add player";
+
+  modal.hidden = false;
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function closePlayerModal() {
+  const modal = document.getElementById("player-modal");
+  if (!modal) return;
+  modal.hidden = true;
+  modal.setAttribute("aria-hidden", "true");
+  editingIndex = null;
+}
+
+function wirePlayerModal() {
+  const modal = document.getElementById("player-modal");
+  const form = document.getElementById("player-form");
+  if (!modal || !form) return;
+
+  modal.querySelector(".modal-backdrop")?.addEventListener("click", closePlayerModal);
+  document.getElementById("btn-cancel-player")?.addEventListener("click", closePlayerModal);
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const entry = {
+      id: editingIndex != null ? players[editingIndex]?.id ?? playerId() : playerId(),
+      name: form.querySelector("#player-name").value.trim(),
+      realName: form.querySelector("#player-real-name").value.trim(),
+      bio: form.querySelector("#player-bio").value.trim(),
+      photoUrl: form.querySelector("#player-photo-url").value.trim(),
     };
-  });
 
-  return players;
+    if (!entry.name) {
+      alert("Gamertag is required.");
+      return;
+    }
+
+    if (editingIndex != null) {
+      players[editingIndex] = entry;
+    } else {
+      players.push(entry);
+    }
+
+    closePlayerModal();
+    renderPlayers();
+  });
 }
 
 export async function initPlayers() {
@@ -114,9 +173,11 @@ export async function initPlayers() {
   const content = document.getElementById("players-content");
   if (!content) return;
 
+  wirePlayerModal();
+
   try {
     const data = await loadPlayers();
-    players = normalizePlayersData(data);
+    players = Array.isArray(data?.players) ? data.players : [];
   } catch (err) {
     console.error(err);
     players = [];
@@ -125,20 +186,14 @@ export async function initPlayers() {
   renderPlayers();
   syncAdminControls();
 
-  editBtn?.addEventListener("click", () => {
+  editBtn?.replaceWith(editBtn.cloneNode(true));
+  document.getElementById("btn-edit-players")?.addEventListener("click", () => {
     if (!isAdminLoggedIn()) return;
 
-    if (!editMode) {
-      editMode = true;
-      editBtn.textContent = "Save players";
-      renderPlayers();
-      return;
-    }
-
-    readPlayersFromDom();
-    savePlayers({ players });
-    editMode = false;
-    editBtn.textContent = "Edit players";
-    renderPlayers();
+    const btn = document.getElementById("btn-edit-players");
+    editMode = !editMode;
+    btn.textContent = editMode ? "Cancel editing" : "Edit players";
+    if (!editMode) renderPlayers();
+    else renderPlayers();
   });
 }

@@ -1,10 +1,12 @@
 import { isAdminLoggedIn } from "./admin-auth.js";
-import { loadSchedule, saveSchedule } from "./data-store.js";
+import { loadSchedule, saveSchedule, loadSiteSettings, saveSiteSettings } from "./data-store.js";
 import { syncAdminControls } from "./admin-controls.js";
 import { escapeHtml } from "./home.js";
+import { populateHomeSchedule } from "./home.js";
 
 let scheduleRows = [];
 let editMode = false;
+let siteSettings = { currentWeek: "" };
 
 function formatResultBadge(result) {
   const r = String(result).trim().toUpperCase();
@@ -24,6 +26,48 @@ function formatScoreCell(score, result) {
     return '<span class="schedule-score schedule-score--empty" aria-hidden="true">—</span>';
   }
   return `<span class="schedule-score">${escapeHtml(s)}</span>`;
+}
+
+function uniqueWeeks(rows) {
+  return [...new Set(rows.map((row) => String(row.week ?? "").trim()).filter(Boolean))];
+}
+
+function renderCurrentWeekControl() {
+  const wrap = document.getElementById("current-week-control");
+  const select = document.getElementById("current-week-select");
+  if (!wrap || !select) return;
+
+  const show = isAdminLoggedIn();
+  wrap.hidden = !show;
+
+  if (!show) return;
+
+  const weeks = uniqueWeeks(scheduleRows);
+  select.innerHTML = weeks
+    .map(
+      (week) =>
+        `<option value="${escapeHtml(week)}"${week === siteSettings.currentWeek ? " selected" : ""}>${escapeHtml(week)}</option>`
+    )
+    .join("");
+}
+
+async function saveCurrentWeek(week) {
+  siteSettings = { ...siteSettings, currentWeek: week };
+  try {
+    await saveSiteSettings(siteSettings);
+    await populateHomeSchedule();
+  } catch (err) {
+    console.error(err);
+    alert(err.message || "Could not save current week.");
+  }
+}
+
+function wireCurrentWeekControl() {
+  const select = document.getElementById("current-week-select");
+  select?.addEventListener("change", () => {
+    if (!isAdminLoggedIn()) return;
+    saveCurrentWeek(select.value);
+  });
 }
 
 function updateScheduleAdminButtons() {
@@ -122,6 +166,7 @@ function wireEditButton() {
       editMode = true;
       fresh.textContent = "Save Schedule";
       renderScheduleTable();
+      renderCurrentWeekControl();
       return;
     }
 
@@ -136,6 +181,7 @@ function wireEditButton() {
     editMode = false;
     fresh.textContent = "Edit Schedule";
     renderScheduleTable();
+    renderCurrentWeekControl();
   });
 }
 
@@ -152,7 +198,10 @@ export async function initSchedule() {
   if (!tbody) return;
 
   try {
-    scheduleRows = await loadSchedule();
+    [scheduleRows, siteSettings] = await Promise.all([
+      loadSchedule(),
+      loadSiteSettings().catch(() => ({ currentWeek: "" })),
+    ]);
   } catch {
     tbody.innerHTML =
       '<tr><td colspan="5">Could not load schedule. Use a local server.</td></tr>';
@@ -164,8 +213,10 @@ export async function initSchedule() {
   if (btn) btn.textContent = "Edit Schedule";
 
   renderScheduleTable();
+  renderCurrentWeekControl();
   wireEditButton();
   wireAddRowButton();
+  wireCurrentWeekControl();
   syncAdminControls();
   updateScheduleAdminButtons();
 }

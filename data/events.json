@@ -1,0 +1,54 @@
+[
+  {
+    "id": "nba-2k-2026",
+    "navLabel": "NBA 2K Tournament",
+    "title": "NBA 2K Tournament",
+    "subtitle": "A PHS Esports Event",
+    "summary": "Open to all PHS students. Come compete in our school-wide NBA 2K tournament — no experience required.",
+    "status": "Registration Open",
+    "bannerUrl": "",
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "Inaugural Winter Tournament 2026"
+      },
+      {
+        "type": "text",
+        "text": "Open to all Poolesville High School students — no prior tournament experience required. Bracket info and match codes are shared on Discord before each round."
+      },
+      {
+        "type": "infoGrid",
+        "title": "Dates",
+        "rows": [
+          { "label": "First Round", "value": "February 3–5, 2026" },
+          { "label": "Second Round", "value": "February 10, 2026" },
+          { "label": "Championship Game", "value": "February 11, 2026" }
+        ]
+      },
+      {
+        "type": "infoGrid",
+        "title": "Times",
+        "rows": [
+          { "label": "First Round", "value": "2:45 p.m. – 4:15 p.m." },
+          { "label": "Second Round", "value": "2:45 p.m. – 3:30 p.m." },
+          { "label": "Championship Game", "value": "2:45 p.m." }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Rules & Guidelines",
+        "items": [
+          "Open to all Poolesville High School students.",
+          "No prior tournament experience required.",
+          "Follow all MCPS and school conduct policies during play.",
+          "Check in at the posted time — late arrivals may forfeit their slot."
+        ]
+      },
+      {
+        "type": "button",
+        "label": "Sign Up for the Tournament",
+        "url": "https://docs.google.com/forms/d/e/1FAIpQLSfcj3dhMMNBOK10e-bgZQWkJBvBM5Qe0S1lHJPRFdCJoZRruA/viewform"
+      }
+    ]
+  }
+]
