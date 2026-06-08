@@ -1,12 +1,17 @@
 import { isAdminLoggedIn } from "./admin-auth.js";
 import { loadSchedule, saveSchedule, loadSiteSettings, saveSiteSettings } from "./data-store.js";
 import { syncAdminControls } from "./admin-controls.js";
-import { escapeHtml } from "./home.js";
-import { populateHomeSchedule } from "./home.js";
+import {
+  escapeHtml,
+  normalizeWeekLabel,
+  parseSiteSettings,
+  populateHomeSchedule,
+} from "./home.js";
 
 let scheduleRows = [];
 let editMode = false;
 let siteSettings = { currentWeek: "" };
+let suppressWeekSelectChange = false;
 
 function formatResultBadge(result) {
   const r = String(result).trim().toUpperCase();
@@ -32,40 +37,124 @@ function uniqueWeeks(rows) {
   return [...new Set(rows.map((row) => String(row.week ?? "").trim()).filter(Boolean))];
 }
 
+function formatScheduleDate(dateStr) {
+  const raw = String(dateStr ?? "").trim();
+  if (!raw) return "—";
+  const parsed = new Date(raw);
+  if (Number.isNaN(parsed.getTime())) return raw;
+  return parsed.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+function formatOpponentLabel(opponent) {
+  const raw = String(opponent ?? "").trim();
+  if (!raw) return "—";
+  return raw.replace(/^vs\.\s*/i, "vs ");
+}
+
 function renderCurrentWeekControl() {
   const wrap = document.getElementById("current-week-control");
   const select = document.getElementById("current-week-select");
+  const saveBtn = document.getElementById("btn-save-current-week");
   if (!wrap || !select) return;
 
   const show = isAdminLoggedIn();
   wrap.hidden = !show;
+  if (saveBtn) saveBtn.hidden = !show;
 
   if (!show) return;
 
-  const weeks = uniqueWeeks(scheduleRows);
+  let weeks = uniqueWeeks(scheduleRows);
+  const saved = String(siteSettings.currentWeek ?? "").trim();
+  if (saved && !weeks.includes(saved)) {
+    weeks = [saved, ...weeks];
+  }
+
+  suppressWeekSelectChange = true;
   select.innerHTML = weeks
     .map(
       (week) =>
-        `<option value="${escapeHtml(week)}"${week === siteSettings.currentWeek ? " selected" : ""}>${escapeHtml(week)}</option>`
+        `<option value="${escapeHtml(week)}"${week === saved ? " selected" : ""}>${escapeHtml(week)}</option>`
     )
     .join("");
+  if (saved && weeks.includes(saved)) {
+    select.value = saved;
+  }
+  suppressWeekSelectChange = false;
+  updateCurrentWeekSaveUi();
+}
+
+function setCurrentWeekSaveStatus(message, { isError = false } = {}) {
+  const status = document.getElementById("current-week-save-status");
+  if (!status) return;
+  if (!message) {
+    status.hidden = true;
+    status.textContent = "";
+    status.classList.remove("is-error");
+    return;
+  }
+  status.hidden = false;
+  status.textContent = message;
+  status.classList.toggle("is-error", isError);
+}
+
+function isCurrentWeekDirty() {
+  const select = document.getElementById("current-week-select");
+  if (!select) return false;
+  return select.value !== String(siteSettings.currentWeek ?? "").trim();
+}
+
+function updateCurrentWeekSaveUi() {
+  const btn = document.getElementById("btn-save-current-week");
+  if (!btn) return;
+
+  if (!isAdminLoggedIn()) {
+    btn.hidden = true;
+    return;
+  }
+
+  btn.hidden = false;
+  const dirty = isCurrentWeekDirty();
+  btn.disabled = !dirty;
+  btn.textContent = dirty ? "Save current week" : "Saved";
+  if (!dirty) {
+    setCurrentWeekSaveStatus("");
+  }
 }
 
 async function saveCurrentWeek(week) {
+  if (!isAdminLoggedIn()) return;
+
   siteSettings = { ...siteSettings, currentWeek: week };
+  const btn = document.getElementById("btn-save-current-week");
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "Saving…";
+  }
+
   try {
     await saveSiteSettings(siteSettings);
-    await populateHomeSchedule();
+    await populateHomeSchedule(siteSettings);
+    renderScheduleTable();
+    updateCurrentWeekSaveUi();
+    setCurrentWeekSaveStatus("Saved — home page updated.");
   } catch (err) {
     console.error(err);
-    alert(err.message || "Could not save current week.");
+    updateCurrentWeekSaveUi();
+    setCurrentWeekSaveStatus(err.message || "Could not save current week.", { isError: true });
   }
 }
 
 function wireCurrentWeekControl() {
   const select = document.getElementById("current-week-select");
+  const btn = document.getElementById("btn-save-current-week");
+
   select?.addEventListener("change", () => {
-    if (!isAdminLoggedIn()) return;
+    if (suppressWeekSelectChange) return;
+    updateCurrentWeekSaveUi();
+  });
+
+  btn?.addEventListener("click", () => {
+    if (!isAdminLoggedIn() || !select) return;
     saveCurrentWeek(select.value);
   });
 }
@@ -83,13 +172,23 @@ function renderScheduleTable() {
 
   if (actionsHeader) actionsHeader.hidden = !editMode;
 
+  const currentWeekLabel = normalizeWeekLabel(siteSettings.currentWeek);
+
   tbody.innerHTML = scheduleRows
     .map(
       (row, index) => `
-    <tr data-row-index="${index}">
+    <tr data-row-index="${index}"${
+      currentWeekLabel && normalizeWeekLabel(row.week) === currentWeekLabel
+        ? ' class="is-current-week"'
+        : ""
+    }>
       <td class="col-week"${editMode ? ' contenteditable="true"' : ""}>${escapeHtml(row.week ?? "")}</td>
-      <td${editMode ? ' contenteditable="true"' : ""}>${escapeHtml(row.date ?? "")}</td>
-      <td${editMode ? ' contenteditable="true"' : ""}>${escapeHtml(row.opponent ?? "")}</td>
+      <td class="col-date"${editMode ? ' contenteditable="true"' : ""}>${
+        editMode ? escapeHtml(row.date ?? "") : escapeHtml(formatScheduleDate(row.date))
+      }</td>
+      <td class="col-opponent"${editMode ? ' contenteditable="true"' : ""}>${
+        editMode ? escapeHtml(row.opponent ?? "") : escapeHtml(formatOpponentLabel(row.opponent))
+      }</td>
       <td class="col-result"${editMode ? ' contenteditable="true"' : ""}>${
         editMode ? escapeHtml(row.result ?? "") : formatResultBadge(row.result)
       }</td>
@@ -200,7 +299,7 @@ export async function initSchedule() {
   try {
     [scheduleRows, siteSettings] = await Promise.all([
       loadSchedule(),
-      loadSiteSettings().catch(() => ({ currentWeek: "" })),
+      loadSiteSettings().then(parseSiteSettings).catch(() => ({ currentWeek: "" })),
     ]);
   } catch {
     tbody.innerHTML =
@@ -219,4 +318,8 @@ export async function initSchedule() {
   wireCurrentWeekControl();
   syncAdminControls();
   updateScheduleAdminButtons();
+
+  document.addEventListener("phs-admin-sync", () => {
+    renderCurrentWeekControl();
+  });
 }

@@ -27,6 +27,36 @@ Render’s **free tier sleeps** after ~15 minutes with no visitors. The **first 
 
 If staff are on **MCPS Wi‑Fi**, `*.onrender.com` is sometimes filtered. Try GitHub Pages or have them test on phone data.
 
+## School network (MCPS Wi‑Fi)
+
+School filters often block sites for reasons that are **not** about your content:
+
+| What you see | Likely cause |
+|--------------|--------------|
+| “Blocked” / filter page | `onrender.com` or “Games” category — common on MCPS |
+| Spinner forever, then error | Render **cold start** (free tier sleeps ~15 min) — looks like a block |
+| Site loads but images/forms broken | `unsplash.com`, `discord.gg`, or YouTube blocked separately |
+
+**Do not use VPNs or proxies** to get around MCPS filters — that violates school policy and can mean discipline.
+
+### What works best at school
+
+1. **Share the GitHub Pages link** (static, fast, usually allowed):
+   **[https://jelli13.github.io/poolesville-esports/](https://jelli13.github.io/poolesville-esports/)**
+   Schedule, roster, and events read from `data/*.json` in the repo. Admin saves still need Render or `npm start` locally.
+
+2. **Ask IT to whitelist** (best long-term) — have **Mr. Broome** or another staff sponsor email MCPS IT / submit a help ticket with:
+   - Purpose: official PHS varsity athletics / MCEL team information
+   - URLs to allow:
+     - `https://jelli13.github.io/poolesville-esports/`
+     - `https://poolesville-esports.onrender.com/` (if you need live admin)
+   - Category request: **Education** (not Games)
+   - Faculty contact: `Ryan_J_Broome@mcpsmd.org`
+
+3. **Link from an MCPS page** — a link on [Poolesville HS](https://www.montgomeryschoolsmd.org/schools/poolesvillehs/) or Google Classroom almost always works because `montgomeryschoolsmd.org` and Classroom are already allowed.
+
+4. **Google Sites (MCPS account)** — if IT won’t whitelist external hosts, mirror key info on a Sites page under your `@mcpsmd.org` account and link “full site” for home use.
+
 ### GitHub Pages (fast static backup)
 
 1. Repo **Settings → Pages → Source: GitHub Actions**

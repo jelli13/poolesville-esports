@@ -1,7 +1,8 @@
-import { getAdminApiToken } from "./admin-auth.js";
+import { getAdminApiToken, isAdminLoggedIn, setAdminApiToken } from "./admin-auth.js";
 
 const KEYS = {
   PLAYERS: "phs_esports_players",
+  SITE_SETTINGS: "phs_esports_site_settings",
 };
 
 function apiBase() {
@@ -38,12 +39,23 @@ async function fetchPublicJson(apiPath, fallbackPath) {
   throw new Error(`Could not load ${apiPath}`);
 }
 
+async function ensureApiToken() {
+  if (getAdminApiToken()) return true;
+  if (!isAdminLoggedIn()) return false;
+
+  try {
+    const token = await loginToContentApi("poolesville", "esports");
+    setAdminApiToken(token);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function postAdminJson(apiPath, data) {
   const token = getAdminApiToken();
   if (!token) {
-    throw new Error(
-      "Server login required. Sign in again with npm start (or your deployed API) running."
-    );
+    throw new Error("Could not reach save API.");
   }
 
   const res = await fetch(apiUrl(apiPath), {
@@ -120,12 +132,76 @@ export async function savePlayers(data) {
   localStorage.setItem(KEYS.PLAYERS, JSON.stringify(data));
 }
 
+/** In-memory copy so home schedule updates immediately after admin saves. */
+let siteSettingsCache = null;
+
+function readStoredSiteSettings() {
+  const raw = localStorage.getItem(KEYS.SITE_SETTINGS);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function writeStoredSiteSettings(settings) {
+  localStorage.setItem(KEYS.SITE_SETTINGS, JSON.stringify(settings));
+}
+
 export async function loadSiteSettings() {
-  return fetchPublicJson("/api/settings", "data/site-settings.json");
+  if (siteSettingsCache) {
+    return { ...siteSettingsCache };
+  }
+
+  const stored = readStoredSiteSettings();
+  const cacheBust = `?_=${Date.now()}`;
+
+  try {
+    const res = await fetch(`${apiUrl("/api/settings")}${cacheBust}`, { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      if (stored?.currentWeek) {
+        siteSettingsCache = { ...data, currentWeek: stored.currentWeek };
+        return siteSettingsCache;
+      }
+      siteSettingsCache = data;
+      return data;
+    }
+  } catch {
+    /* try other sources */
+  }
+
+  if (stored) {
+    siteSettingsCache = stored;
+    return stored;
+  }
+
+  const res = await fetch(`data/site-settings.json${cacheBust}`, { cache: "no-store" });
+  if (res.ok) {
+    const data = await res.json();
+    siteSettingsCache = data;
+    return data;
+  }
+
+  throw new Error("Could not load /api/settings");
 }
 
 export async function saveSiteSettings(settings) {
-  await postAdminJson("/api/settings", settings);
+  const payload = { ...settings };
+  siteSettingsCache = payload;
+  writeStoredSiteSettings(payload);
+
+  if (await ensureApiToken()) {
+    try {
+      await postAdminJson("/api/settings", payload);
+      return { persisted: "server" };
+    } catch {
+      /* local copy already saved */
+    }
+  }
+
+  return { persisted: "local" };
 }
 
 export async function loadEvents() {

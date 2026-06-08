@@ -504,12 +504,52 @@ body.nav-open .site-header {
   font-weight: 600;
   color: var(--text);
   white-space: nowrap;
-  width: 11rem;
 }
 
-.varsity-schedule-table thead .col-week {
-  padding: 0;
-  border: none;
+.varsity-schedule-table.schedule-block {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.varsity-schedule-table.schedule-block table {
+  width: 100%;
+  min-width: 40rem;
+  table-layout: auto;
+}
+
+.varsity-schedule-table.schedule-block th,
+.varsity-schedule-table.schedule-block td {
+  white-space: nowrap;
+  vertical-align: middle;
+  padding: 0.7rem 0.85rem;
+}
+
+.varsity-schedule-table.schedule-block th {
+  color: #000;
+  background: var(--gold);
+  text-align: center;
+  font-size: 0.75rem;
+}
+
+.varsity-schedule-table.schedule-block thead th.col-week {
+  color: #000;
+  text-align: center;
+  padding: 0.7rem 0.85rem;
+}
+
+.varsity-schedule-table.schedule-block td.col-week {
+  text-align: left;
+  font-weight: 700;
+}
+
+.varsity-schedule-table.schedule-block td.col-date,
+.varsity-schedule-table.schedule-block td.col-opponent {
+  text-align: left;
+}
+
+.varsity-schedule-table.schedule-block td.col-result,
+.varsity-schedule-table.schedule-block td.col-score {
+  text-align: center;
 }
 
 .result-win {
@@ -1907,44 +1947,18 @@ body.nav-open .site-header {
   }
 
   .varsity-schedule-table.schedule-block {
-    overflow: hidden;
+    overflow-x: auto;
   }
 
-  .varsity-schedule-table table {
-    table-layout: fixed;
-    width: 100%;
-    font-size: 0.72rem;
+  .varsity-schedule-table.schedule-block table {
+    min-width: 34rem;
+    font-size: 0.82rem;
   }
 
-  .varsity-schedule-table th,
-  .varsity-schedule-table td {
-    padding: 0.45rem 0.35rem;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    vertical-align: top;
-    min-width: 0;
-  }
-
-  .varsity-schedule-table th {
-    font-size: 0.62rem;
-    letter-spacing: 0.04em;
-  }
-
-  .varsity-schedule-table .col-week {
-    white-space: normal;
-    width: 34%;
-  }
-
-  .varsity-schedule-table th:nth-child(2),
-  .varsity-schedule-table td:nth-child(2) {
-    width: 46%;
-  }
-
-  .varsity-schedule-table th:nth-child(3),
-  .varsity-schedule-table td:nth-child(3),
-  .varsity-schedule-table .col-result {
-    width: 20%;
-    text-align: center;
+  .varsity-schedule-table.schedule-block th,
+  .varsity-schedule-table.schedule-block td {
+    padding: 0.55rem 0.6rem;
+    white-space: nowrap;
   }
 }
 
@@ -2925,12 +2939,18 @@ body.nav-open .site-header {
 /* —— v2: schedule table —— */
 .varsity-schedule-table thead th {
   background: var(--gold);
-  color: var(--black);
+  color: #000;
   font-weight: 700;
   text-transform: uppercase;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   border-bottom: none;
+  text-align: center;
+}
+
+.varsity-schedule-table thead th.col-week {
+  color: #000;
+  text-align: center;
 }
 
 .varsity-schedule-table tbody tr:nth-child(odd) {
@@ -3904,21 +3924,71 @@ body.nav-open .site-header {
 
 /* —— Admin current week —— */
 .current-week-control {
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.65rem;
   font-family: var(--font-display);
   font-size: 0.9rem;
   color: var(--text-muted);
 }
 
+.admin-only[hidden],
+#current-week-control[hidden] {
+  display: none !important;
+}
+
+.current-week-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .current-week-control select {
-  padding: 0.4rem 0.6rem;
+  padding: 0.45rem 2rem 0.45rem 0.65rem;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: var(--black-soft);
+  background-color: var(--black-soft);
   color: var(--text);
   font-family: inherit;
+  min-width: 9rem;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23c9a227' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.65rem center;
+  background-size: 0.65rem;
+}
+
+.current-week-save-status {
+  flex: 1 1 100%;
+  font-size: 0.85rem;
+  color: var(--gold-dim);
+}
+
+.current-week-save-status.is-error {
+  color: #f08080;
+}
+
+#btn-save-current-week:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.varsity-schedule-table tr.is-current-week td {
+  background: rgba(255, 194, 0, 0.08);
+}
+
+.varsity-schedule-table tr.is-current-week td:first-child {
+  box-shadow: inset 3px 0 0 var(--gold);
+}
+
+.schedule-empty-note {
+  padding: 0.75rem 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
 }
 
 .schedule-admin-actions {
@@ -3927,6 +3997,10 @@ body.nav-open .site-header {
   align-items: center;
   gap: 0.75rem;
   margin-top: 1rem;
+}
+
+.schedule-admin-actions:not(:has(.admin-only:not([hidden]))) {
+  margin-top: 0;
 }
 
 @media (max-width: 900px) {

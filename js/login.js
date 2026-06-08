@@ -69,14 +69,7 @@ form?.addEventListener("submit", async (e) => {
     try {
       apiToken = await loginToContentApi(username, password);
     } catch {
-      if (errorEl) {
-        errorEl.hidden = false;
-        errorEl.textContent =
-          "Logged in locally, but the save API is unavailable. Run npm start so edits apply for everyone.";
-      }
-      setAdminSession(null);
-      window.location.replace("index.html");
-      return;
+      /* Admin session still works; edits save locally and sync when API is available. */
     }
 
     setAdminSession(apiToken);

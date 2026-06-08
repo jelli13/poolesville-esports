@@ -128,59 +128,102 @@ function wireInterestForm() {
   section.hidden = false;
 }
 
-function weekIndex(rows, currentWeek) {
-  const target = String(currentWeek ?? "").trim().toLowerCase();
+export function normalizeWeekLabel(value) {
+  return String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+}
+
+export function parseSiteSettings(raw) {
+  if (!raw || typeof raw !== "object") return { currentWeek: "" };
+  if (typeof raw.currentWeek === "string") return { currentWeek: raw.currentWeek };
+  if (raw.data && typeof raw.data.currentWeek === "string") {
+    return { currentWeek: raw.data.currentWeek };
+  }
+  return { currentWeek: "" };
+}
+
+export function weekIndex(rows, currentWeek) {
+  const target = normalizeWeekLabel(currentWeek);
   if (!target) return 0;
-  const idx = rows.findIndex((row) => String(row.week ?? "").trim().toLowerCase() === target);
+  const idx = rows.findIndex((row) => normalizeWeekLabel(row.week) === target);
   return idx >= 0 ? idx : 0;
 }
 
-export async function populateHomeSchedule() {
-  const section = document.getElementById("home-schedule-section");
-  const tbody = document.getElementById("home-schedule-tbody");
-  if (!section || !tbody) return;
+export function isByeWeek(row) {
+  const week = normalizeWeekLabel(row.week);
+  const opponent = String(row.opponent ?? "").trim().toUpperCase();
+  const result = String(row.result ?? "").trim().toUpperCase();
+  return week.includes("bye") || opponent === "BYE" || result === "BYE";
+}
 
-  try {
-    const [rows, settings] = await Promise.all([loadSchedule(), loadSiteSettings()]);
-    const start = weekIndex(rows, settings?.currentWeek);
-    const upcoming = rows.slice(start).filter(
-      (row) =>
-        !String(row.week).toLowerCase().includes("bye") &&
-        String(row.opponent).trim().toUpperCase() !== "TBD" &&
-        String(row.opponent).trim() !== "—"
-    );
+/** Next N schedule rows on the home page, starting at the admin-selected week. */
+export const HOME_SCHEDULE_ROW_LIMIT = 3;
 
-    if (upcoming.length === 0) {
-      section.hidden = true;
-      return;
-    }
+export function homeScheduleRows(rows, currentWeek, limit = HOME_SCHEDULE_ROW_LIMIT) {
+  const start = weekIndex(rows, currentWeek);
+  return rows.slice(start, start + limit);
+}
 
-    tbody.innerHTML = upcoming
-      .slice(0, 4)
-      .map((row) => {
-        const result = String(row.result ?? "").trim().toUpperCase();
-        const status =
-          result === "TBD" || result === "—" || result === ""
-            ? "Upcoming"
-            : result === "W"
-              ? "Win"
-              : result === "L"
-                ? "Loss"
-                : escapeHtml(row.result ?? "");
-        return `
+function formatHomeStatus(row) {
+  if (isByeWeek(row)) return "BYE";
+  const result = String(row.result ?? "").trim().toUpperCase();
+  if (result === "TBD" || result === "—" || result === "") return "Upcoming";
+  if (result === "W") return "Win";
+  if (result === "L") return "Loss";
+  return escapeHtml(row.result ?? "");
+}
+
+function renderHomeScheduleRows(tbody, rows) {
+  tbody.innerHTML = rows
+    .map(
+      (row) => `
       <tr>
         <td data-label="Week">${escapeHtml(row.week ?? "")}</td>
         <td data-label="Date">${escapeHtml(row.date ?? "")}</td>
         <td data-label="Opponent">${escapeHtml(row.opponent ?? "")}</td>
-        <td data-label="Status">${status}</td>
-      </tr>`;
-      })
-      .join("");
+        <td data-label="Status">${formatHomeStatus(row)}</td>
+      </tr>`
+    )
+    .join("");
+}
 
-    section.hidden = false;
+export async function populateHomeSchedule(settingsOverride = null) {
+  const section = document.getElementById("home-schedule-section");
+  const tbody = document.getElementById("home-schedule-tbody");
+  if (!section || !tbody) return;
+
+  let rows = [];
+  try {
+    rows = await loadSchedule();
   } catch {
     section.hidden = true;
+    return;
   }
+
+  let settings = { currentWeek: "" };
+  if (settingsOverride) {
+    settings = parseSiteSettings(settingsOverride);
+  } else {
+    try {
+      settings = parseSiteSettings(await loadSiteSettings());
+    } catch {
+      settings = { currentWeek: "" };
+    }
+  }
+
+  const upcoming = homeScheduleRows(rows, settings.currentWeek);
+
+  if (upcoming.length === 0) {
+    tbody.innerHTML =
+      '<tr><td colspan="4" class="schedule-empty-note">No schedule rows from the selected week. Pick a week under Schedule → Current week, then click Save.</td></tr>';
+    section.hidden = false;
+    return;
+  }
+
+  renderHomeScheduleRows(tbody, upcoming);
+  section.hidden = false;
 }
 
 export async function initHome() {

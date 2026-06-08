@@ -1,7 +1,7 @@
 import { initAdminAuth } from "./admin-auth.js";
 import { syncAdminControls } from "./admin-controls.js";
 import { renderAdminGate } from "./topbar-admin.js";
-import { initHome, warmHeroImages } from "./home.js";
+import { initHome, warmHeroImages, populateHomeSchedule } from "./home.js";
 
 initAdminAuth();
 renderAdminGate();
@@ -158,7 +158,7 @@ async function showVarsityTab(tabId) {
 
   if (tabId === "schedule" && !scheduleReady) {
     scheduleReady = true;
-    const { initSchedule } = await import("./schedule.js");
+    const { initSchedule } = await import("./schedule.js?v=5");
     initSchedule();
   }
 
@@ -270,7 +270,10 @@ async function showPage(pageId, options = {}) {
 
   syncSubtabNav(pageId, { varsityTab, aboutTab, eventTab });
 
-  if (pageId === "home") warmHeroImages();
+  if (pageId === "home") {
+    warmHeroImages();
+    populateHomeSchedule();
+  }
 
   syncAdminControls();
   window.scrollTo({ top: 0, behavior: "smooth" });

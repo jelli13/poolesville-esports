@@ -3,14 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Poolesville Esports</title>
+  <meta
+    name="description"
+    content="Poolesville High School (MCPS) varsity esports team — schedules, roster, MCEL league info, and club events. Official school athletics program."
+  />
+  <meta name="author" content="Poolesville High School — Falcon Esports" />
+  <meta name="robots" content="index, follow" />
+  <title>Poolesville High School Falcon Esports</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="css/styles.css?v=38" />
+  <link rel="stylesheet" href="css/styles.css?v=41" />
   <link rel="stylesheet" href="css/admin.css?v=9" />
   <link rel="preload" as="image" href="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1280&q=70" />
   <link rel="preload" as="image" href="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1280&q=70" />
@@ -240,11 +246,11 @@
             <table>
               <thead>
                 <tr>
-                  <th scope="col">Week</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Opponent</th>
-                  <th scope="col">Result</th>
-                  <th scope="col">Score</th>
+                  <th scope="col" class="col-week">Week</th>
+                  <th scope="col" class="col-date">Date</th>
+                  <th scope="col" class="col-opponent">Opponent</th>
+                  <th scope="col" class="col-result">Result</th>
+                  <th scope="col" class="col-score">Score</th>
                   <th id="schedule-actions-header" class="col-actions" scope="col" hidden>
                     <span class="sr-only">Delete row</span>
                   </th>
@@ -254,10 +260,22 @@
             </table>
           </div>
           <div class="schedule-admin-actions">
-            <label id="current-week-control" class="current-week-control admin-only" hidden>
-              <span>Current week</span>
-              <select id="current-week-select" aria-label="Current competition week"></select>
-            </label>
+            <div id="current-week-control" class="current-week-control admin-only" hidden>
+              <label class="current-week-field" for="current-week-select">
+                <span>Current week</span>
+                <select id="current-week-select" aria-label="Current competition week"></select>
+              </label>
+              <button
+                type="button"
+                id="btn-save-current-week"
+                class="btn-admin admin-only"
+                hidden
+                disabled
+              >
+                Save current week
+              </button>
+              <span id="current-week-save-status" class="current-week-save-status" hidden aria-live="polite"></span>
+            </div>
             <button type="button" id="btn-edit-schedule" class="btn-admin admin-only" hidden>Edit Schedule</button>
             <button type="button" id="btn-add-schedule-row" class="btn-admin btn-admin-outline admin-only" hidden>Add row</button>
           </div>
@@ -645,6 +663,6 @@
   </div>
 
   <script src="js/site-config.js"></script>
-  <script src="js/app.js?v=24" type="module"></script>
+  <script src="js/app.js?v=28" type="module"></script>
 </body>
 </html>
