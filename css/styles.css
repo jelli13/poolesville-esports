@@ -74,10 +74,10 @@ body.nav-open .site-header {
     align-items: center;
     justify-content: space-between;
     gap: 1.75rem;
-    max-width: var(--section-max);
+    max-width: none;
     width: 100%;
-    margin: 0 auto;
-    padding: 0.65rem 1.75rem;
+    margin: 0;
+    padding: 0.65rem clamp(1rem, 3vw, 2rem);
     min-height: var(--header-height);
   }
 
@@ -88,8 +88,8 @@ body.nav-open .site-header {
     justify-content: flex-end;
     align-items: center;
     margin-left: auto;
+    padding-right: clamp(0.35rem, 1.5vw, 1rem);
     background: transparent;
-    padding: 0;
     overflow: visible;
     z-index: 102;
   }
@@ -120,13 +120,15 @@ body.nav-open .site-header {
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
-  max-width: var(--section-max);
-  margin: 0 auto;
-  padding: 0.65rem 1.25rem;
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0.65rem clamp(1rem, 3vw, 2rem);
   min-height: var(--header-height);
 }
 
 .header-brand {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -311,7 +313,8 @@ body.nav-open .site-header {
 .nav-dropdown-menu {
   position: absolute;
   top: calc(100% + 0.35rem);
-  left: 0;
+  left: auto;
+  right: 0;
   min-width: 13rem;
   list-style: none;
   padding: 0.4rem;
@@ -415,25 +418,34 @@ body.nav-open .site-header {
 }
 
 .page.is-active {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100svh - var(--header-height));
+  min-height: calc(100dvh - var(--header-height));
 }
 
 .page-inner {
-  max-width: var(--section-max);
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem 4rem;
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 2.5rem clamp(1.25rem, 4vw, 3rem) 4rem;
   box-sizing: border-box;
 }
 
 .page-inner--wide {
-  max-width: var(--section-max);
-  padding-inline: 1.5rem;
+  max-width: none;
+  width: 100%;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
 }
 
 .page-content {
-  max-width: var(--section-max);
-  margin: 0 auto;
-  padding: 2rem 1.5rem 3rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 1.75rem clamp(1.25rem, 4vw, 3rem) 2.5rem;
   box-sizing: border-box;
 }
 
@@ -488,7 +500,9 @@ body.nav-open .site-header {
 .club-panel.is-active,
 .about-panel.is-active,
 .event-panel.is-active {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .club-page-title {
@@ -1528,10 +1542,13 @@ body.nav-open .site-header {
 }
 
 .footer-inner {
-  max-width: 76rem;
-  margin: 0 auto;
-  padding: 1.25rem 1.5rem 1rem;
-  display: grid;
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 1.25rem clamp(1rem, 3vw, 2rem) 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 0.85rem;
 }
 
@@ -1567,7 +1584,9 @@ body.nav-open .site-header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-start;
   gap: 0.85rem;
+  width: 100%;
 }
 
 .footer-links a,
@@ -1608,6 +1627,8 @@ body.nav-open .site-header {
   color: var(--text-muted);
   padding: 0.65rem 0 0;
   margin: 0;
+  width: 100%;
+  text-align: left;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -1635,8 +1656,10 @@ body.nav-open .site-header {
 
   .footer-inner {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    padding: 0.65rem 0.65rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
+    justify-content: flex-start;
+    padding: 0.65rem clamp(0.85rem, 3vw, 1.25rem) calc(0.65rem + env(safe-area-inset-bottom, 0px));
     gap: 0;
   }
 
@@ -1649,11 +1672,12 @@ body.nav-open .site-header {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    justify-content: center;
-    gap: 0.55rem;
+    justify-content: flex-start;
+    gap: 0.65rem;
     width: 100%;
     min-height: 1.5rem;
-    overflow-x: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .footer-links a,
@@ -1684,13 +1708,17 @@ body.nav-open .site-header {
 @media (max-width: 900px) {
   .header-inner {
     flex-wrap: nowrap;
-    padding-inline: 1rem;
+    padding-inline: clamp(0.85rem, 3vw, 1.25rem);
+  }
+
+  .header-brand {
+    margin-right: auto;
   }
 
   .nav-toggle {
     display: flex;
     flex-shrink: 0;
-    margin-left: auto;
+    margin-left: 0;
   }
 
   .site-nav {
@@ -2733,15 +2761,17 @@ body.nav-open .site-header {
 
 /* —— v2 redesign: page headers —— */
 .page-header {
+  flex-shrink: 0;
   background: var(--black-elevated);
   border-bottom: 1px solid var(--border);
   padding: 2rem 0 1.85rem;
 }
 
 .page-header-inner {
-  max-width: var(--section-max);
-  margin: 0 auto;
-  padding: 0 1.5rem;
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
 }
 
 .page-header-title {
@@ -2771,7 +2801,6 @@ body.nav-open .site-header {
 }
 
 #page-home .hero {
-  min-height: 70vh;
   align-items: center;
   justify-content: center;
 }
@@ -3499,16 +3528,13 @@ body.nav-open .site-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: clamp(420px, 72vh, 680px);
+  flex-shrink: 0;
+  min-height: calc(100svh - var(--header-height));
+  min-height: calc(100dvh - var(--header-height));
   overflow: hidden;
 }
 
 @media (max-width: 900px) {
-  #page-home .hero {
-    min-height: calc(100svh - var(--header-height));
-    min-height: calc(100dvh - var(--header-height));
-  }
-
   #page-home .hero-content {
     padding: 2rem 1.25rem;
   }
@@ -4068,6 +4094,358 @@ body.nav-open .site-header {
 
 .about-faq {
   margin-top: 2rem;
+}
+
+/* —— About: collegiate esports links —— */
+.college-esports-block {
+  margin-top: 2rem;
+  padding: 1.5rem 1.75rem;
+  background: var(--black-elevated);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: 10px;
+}
+
+.college-esports-title {
+  font-family: var(--font-brand);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 0.65rem;
+}
+
+.college-esports-lead {
+  margin: 0 0 1.25rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  max-width: 42rem;
+}
+
+.college-esports-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.college-esports-btn {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* —— About: Rocket League —— */
+.rocket-league-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  width: 100%;
+  max-width: none;
+}
+
+.rocket-league-showcase {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.rocket-league-showcase-main {
+  position: relative;
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  min-height: 14rem;
+}
+
+.rocket-league-showcase-main img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 14rem;
+  object-fit: cover;
+}
+
+.rocket-league-showcase-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 2.5rem 1.25rem 1rem;
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  background: linear-gradient(transparent, rgba(8, 8, 8, 0.92));
+}
+
+.rocket-league-showcase-side {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 1rem;
+  min-height: 14rem;
+}
+
+.rocket-league-showcase-thumb {
+  margin: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.rocket-league-showcase-thumb {
+  position: relative;
+}
+
+.rocket-league-showcase-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 6.5rem;
+  object-fit: cover;
+}
+
+.rocket-league-showcase-thumb-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 1.75rem 0.75rem 0.55rem;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  background: linear-gradient(transparent, rgba(8, 8, 8, 0.9));
+}
+
+.rocket-league-photo-credit {
+  margin: -0.5rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.rocket-league-photo-credit a {
+  color: var(--gold-dim);
+}
+
+.rocket-league-photo-credit a:hover {
+  color: var(--gold-bright);
+}
+
+.rocket-league-tagline {
+  margin: 0;
+  padding: 1.5rem 1.75rem;
+  border-left: 4px solid var(--gold);
+  border-radius: 0 12px 12px 0;
+  background:
+    var(--circuit-pattern),
+    linear-gradient(135deg, rgba(255, 194, 0, 0.1) 0%, rgba(255, 194, 0, 0.02) 100%);
+  border: 1px solid rgba(255, 194, 0, 0.22);
+  border-left-width: 4px;
+}
+
+.rocket-league-tagline p {
+  margin: 0;
+  font-size: 1.12rem;
+  line-height: 1.75;
+  color: var(--text);
+}
+
+.rocket-league-tagline strong {
+  color: var(--gold-bright);
+  font-family: var(--font-brand);
+  letter-spacing: 0.04em;
+}
+
+.rocket-league-traits {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  flex: 1;
+}
+
+.rocket-league-trait {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 9rem;
+  padding: 1.35rem 1.5rem;
+  background: var(--black-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rocket-league-trait:hover {
+  border-color: rgba(255, 194, 0, 0.35);
+  box-shadow: 0 0 0 1px rgba(255, 194, 0, 0.08);
+}
+
+.rocket-league-trait-icon {
+  display: block;
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.rocket-league-trait-title {
+  font-family: var(--font-brand);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 0.45rem;
+}
+
+.rocket-league-trait p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.rocket-league-why {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem clamp(1.25rem, 3vw, 2.25rem);
+  background: var(--black-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.rocket-league-why-title {
+  font-family: var(--font-brand);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 1rem;
+}
+
+.rocket-league-why-lead {
+  margin: 0 0 1.5rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.rocket-league-reasons {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+  flex: 1;
+}
+
+.rocket-league-reason {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  background: var(--black-soft);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.rocket-league-reason-label {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+}
+
+.rocket-league-reason-desc {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.rocket-league-platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.rocket-league-platform {
+  padding: 0.4rem 0.85rem;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--gold);
+  border-radius: 999px;
+}
+
+@media (max-width: 1023px) {
+  .rocket-league-showcase {
+    grid-template-columns: 1fr;
+  }
+
+  .rocket-league-showcase-side {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
+  }
+
+  .rocket-league-traits {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .page.is-active {
+    min-height: calc(100svh - var(--header-height) - 3.25rem - env(safe-area-inset-bottom, 0px));
+    min-height: calc(100dvh - var(--header-height) - 3.25rem - env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 767px) {
+  .rocket-league-showcase-side {
+    grid-template-columns: 1fr;
+  }
+
+  .rocket-league-traits,
+  .rocket-league-reasons {
+    grid-template-columns: 1fr;
+  }
+
+  .rocket-league-reason {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .rocket-league-tagline {
+    padding: 1.15rem 1.25rem;
+  }
+
+  .rocket-league-why {
+    padding: 1.25rem;
+  }
+
+  .rocket-league-trait {
+    min-height: 0;
+  }
 }
 
 .about-grid + .stats-grid {
