@@ -169,10 +169,10 @@ export async function populateHomeSchedule() {
                 : escapeHtml(row.result ?? "");
         return `
       <tr>
-        <td>${escapeHtml(row.week ?? "")}</td>
-        <td>${escapeHtml(row.date ?? "")}</td>
-        <td>${escapeHtml(row.opponent ?? "")}</td>
-        <td>${status}</td>
+        <td data-label="Week">${escapeHtml(row.week ?? "")}</td>
+        <td data-label="Date">${escapeHtml(row.date ?? "")}</td>
+        <td data-label="Opponent">${escapeHtml(row.opponent ?? "")}</td>
+        <td data-label="Status">${status}</td>
       </tr>`;
       })
       .join("");

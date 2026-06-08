@@ -15,7 +15,7 @@ function renderBlock(block) {
         : "";
     case "button":
       return block.url
-        ? `<a class="btn btn-primary event-block-button" href="${escapeHtml(block.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(block.label ?? "Learn more")} →</a>`
+        ? `<div class="event-block-button-wrap"><a class="btn btn-primary event-block-button" href="${escapeHtml(block.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(block.label ?? "Learn more")} →</a></div>`
         : "";
     case "infoGrid": {
       const rows = (block.rows ?? [])
@@ -118,12 +118,17 @@ function renderEventsList() {
   grid.innerHTML =
     cards +
     `
-    <article class="event-card event-card--placeholder">
-      <div class="event-card-body event-card-body--centered">
-        <h2 class="event-card-title">More Events Coming</h2>
-        <p class="event-card-desc">Check back for upcoming tournaments, scrimmages, and community gaming nights.</p>
-        <span class="event-card-status">Stay Tuned</span>
-        <a class="btn btn-primary" href="#" id="events-discord-link">Join Discord for Updates →</a>
+    <article class="event-card event-card--coming">
+      <div class="event-card-coming-inner">
+        <div class="event-card-coming-copy">
+          <p class="event-card-coming-eyebrow">Stay in the loop</p>
+          <h2 class="event-card-coming-title">More Events Coming</h2>
+          <p class="event-card-coming-desc">Check back for upcoming tournaments, scrimmages, and community gaming nights.</p>
+        </div>
+        <div class="event-card-coming-action">
+          <span class="event-card-coming-badge">Stay Tuned</span>
+          <a class="btn btn-primary event-card-coming-btn" href="#" id="events-discord-link">Join Discord for Updates →</a>
+        </div>
       </div>
     </article>`;
 
@@ -154,7 +159,9 @@ export function syncEventsNavMenu() {
       .join("")}`;
 }
 
-export function showEventById(eventId) {
+export async function showEventById(eventId) {
+  if (events.length === 0) await bootstrapEventsNav();
+
   const event = events.find((e) => e.id === eventId);
   if (!event) return false;
 
@@ -169,15 +176,22 @@ export function showEventsList() {
   document.getElementById("events-list")?.classList.add("is-active");
 }
 
-export async function initEvents() {
-  try {
-    events = await loadEvents();
-  } catch {
-    events = [];
+export async function bootstrapEventsNav() {
+  if (events.length === 0) {
+    try {
+      events = await loadEvents();
+    } catch {
+      events = [];
+    }
   }
-
   syncEventsNavMenu();
-  renderEventsList();
+}
+
+let eventsListenersWired = false;
+
+function wireEventsListeners() {
+  if (eventsListenersWired) return;
+  eventsListenersWired = true;
 
   window.addEventListener("phs:show-event", (e) => {
     showEventById(e.detail?.eventId);
@@ -186,4 +200,10 @@ export async function initEvents() {
   window.addEventListener("phs:show-events-list", () => {
     showEventsList();
   });
+}
+
+export async function initEvents() {
+  await bootstrapEventsNav();
+  renderEventsList();
+  wireEventsListeners();
 }

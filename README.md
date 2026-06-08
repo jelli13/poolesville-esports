@@ -10,7 +10,7 @@ Static site for Poolesville High School Esports (black & gold).
 
 ## Share with clients (public preview)
 
-**Live site (Render):** https://poolesville-esports.onrender.com/
+**Live site (Render):** [https://poolesville-esports.onrender.com/](https://poolesville-esports.onrender.com/)
 
 Use the root URL above — not `localhost`, and `/index.html` is optional.
 
@@ -31,7 +31,7 @@ If staff are on **MCPS Wi‑Fi**, `*.onrender.com` is sometimes filtered. Try Gi
 
 1. Repo **Settings → Pages → Source: GitHub Actions**
 2. Push to `main` (workflow included in `.github/workflows/pages.yml`)
-3. Share: **https://jelli13.github.io/poolesville-esports/**
+3. Share: **[https://jelli13.github.io/poolesville-esports/](https://jelli13.github.io/poolesville-esports/)**
 
 Public Pages site reads `data/*.json` directly. Admin saves still need Render (or another host running `npm start`).
 
@@ -45,7 +45,7 @@ npm install
 npm start
 ```
 
-Open http://localhost:8080
+Open [http://localhost:8080](http://localhost:8080)
 
 `python3 -m http.server` only serves static files; admin saves will not apply site-wide.
 
@@ -61,6 +61,7 @@ Optional environment variables on the server: `ADMIN_USERNAME`, `ADMIN_PASSWORD`
 
 ## Customize
 
-- **`js/site-config.js`** — Discord, YouTube, PHS link, **contact email** (`links.email`), interest form URL
+- `**js/site-config.js**` — Discord, YouTube, PHS link, **contact email** (`links.email`), interest form URL
 - Copy in `index.html` for hero text, FAQ copy, and schedule rows
 - Set `href` on `#full-schedule-link` when you have the full schedule URL
+

@@ -7,6 +7,8 @@ initAdminAuth();
 renderAdminGate();
 initHome();
 
+import("./events.js?v=4").then(({ bootstrapEventsNav }) => bootstrapEventsNav());
+
 document.body.classList.remove("nav-open");
 
 const siteNav = document.getElementById("site-nav");
@@ -74,6 +76,46 @@ function initDesktopDropdownHover() {
 }
 
 initDesktopDropdownHover();
+
+function bindSiteNavClicks() {
+  siteNav?.addEventListener("click", (e) => {
+    if (!(e.target instanceof Element)) return;
+
+    const eventTabBtn = e.target.closest("[data-event-tab]");
+    if (eventTabBtn) {
+      e.preventDefault();
+      showPage("events", { eventTab: eventTabBtn.dataset.eventTab });
+      return;
+    }
+
+    const varsityBtn = e.target.closest("[data-varsity-tab]");
+    if (varsityBtn) {
+      e.preventDefault();
+      showPage("varsity", { varsityTab: varsityBtn.dataset.varsityTab });
+      return;
+    }
+
+    const aboutBtn = e.target.closest("[data-about-tab]");
+    if (aboutBtn) {
+      e.preventDefault();
+      showPage("about", { aboutTab: aboutBtn.dataset.aboutTab });
+      return;
+    }
+
+    const pageBtn = e.target.closest("button[data-page]");
+    if (pageBtn && siteNav.contains(pageBtn)) {
+      const pageId = pageBtn.dataset.page;
+      if (!pageId) return;
+      const options = {};
+      if (pageId === "varsity") options.varsityTab = "schedule";
+      if (pageId === "about") options.aboutTab = "what-is-esports";
+      if (pageId === "events") options.eventTab = "list";
+      showPage(pageId, options);
+    }
+  });
+}
+
+bindSiteNavClicks();
 
 navToggle?.addEventListener("click", () => {
   if (siteNav?.classList.contains("is-open")) {
@@ -148,19 +190,19 @@ function showAboutTab(tabId) {
 async function showEventsView({ eventTab = "list" } = {}) {
   if (!eventsReady) {
     eventsReady = true;
-    const { initEvents, showEventById, showEventsList } = await import("./events.js?v=3");
+    const { initEvents, showEventById, showEventsList } = await import("./events.js?v=4");
     await initEvents();
     if (eventTab && eventTab !== "list") {
-      showEventById(eventTab);
+      await showEventById(eventTab);
     } else {
       showEventsList();
     }
     return;
   }
 
-  const { showEventById, showEventsList } = await import("./events.js?v=3");
+  const { showEventById, showEventsList } = await import("./events.js?v=4");
   if (eventTab && eventTab !== "list") {
-    showEventById(eventTab);
+    await showEventById(eventTab);
   } else {
     showEventsList();
   }
@@ -233,36 +275,6 @@ async function showPage(pageId, options = {}) {
   syncAdminControls();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
-
-mainNavButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const pageId = btn.dataset.page;
-    const options = {};
-    if (pageId === "varsity") options.varsityTab = "schedule";
-    if (pageId === "about") options.aboutTab = "what-is-esports";
-    if (pageId === "events") options.eventTab = "list";
-    showPage(pageId, options);
-  });
-});
-
-varsityTabButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    showPage("varsity", { varsityTab: btn.dataset.varsityTab });
-  });
-});
-
-aboutTabButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    showPage("about", { aboutTab: btn.dataset.aboutTab });
-  });
-});
-
-document.getElementById("events-nav-menu")?.addEventListener("click", (e) => {
-  const btn = e.target.closest("[data-event-tab]");
-  if (!btn) return;
-  e.preventDefault();
-  showPage("events", { eventTab: btn.dataset.eventTab });
-});
 
 document.querySelectorAll("[data-go-varsity]").forEach((el) => {
   el.addEventListener("click", (e) => {
