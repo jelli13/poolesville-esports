@@ -31,7 +31,7 @@
     href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="css/styles.css?v=55" />
+  <link rel="stylesheet" href="css/styles.css?v=60" />
   <link rel="stylesheet" href="css/admin.css?v=9" />
   <link rel="preload" as="image" href="assets/team/mcel-tournament-wide.jpg" />
 </head>
@@ -362,16 +362,6 @@
           </div>
         </header>
         <div class="page-content">
-          <figure class="team-banner" aria-label="Falcon Esports at MCEL">
-            <img
-              src="assets/team/mcel-players-at-finals.jpg"
-              alt="Falcon Esports players at the MCEL Rocket League finals with the league championship trophy"
-              width="1920"
-              height="1081"
-              loading="lazy"
-            />
-            <figcaption class="team-banner-caption">League champions — Montgomery County Esports League</figcaption>
-          </figure>
           <div class="players-header">
             <button type="button" id="btn-edit-players" class="btn-admin admin-only" hidden>Edit players</button>
           </div>
@@ -611,13 +601,13 @@
               <div class="rocket-league-showcase-side">
                 <figure class="rocket-league-showcase-thumb">
                   <img
-                    src="assets/rocket-league/rl-gdc-2016.jpg"
-                    alt="Rocket League showcased at the Game Developers Conference 2016"
+                    src="assets/rocket-league/dreamhack-montreal-2018-thumb.jpg"
+                    alt="Rocket League competition at DreamHack Montreal 2018"
                     width="960"
                     height="640"
                     loading="lazy"
                   />
-                  <figcaption class="rocket-league-showcase-thumb-caption">Rocket League at GDC 2016</figcaption>
+                  <figcaption class="rocket-league-showcase-thumb-caption">DreamHack Montreal 2018</figcaption>
                 </figure>
                 <figure class="rocket-league-showcase-thumb">
                   <img
@@ -714,14 +704,20 @@
           <div class="contact-grid">
             <article class="contact-card">
               <span class="contact-card-icon" aria-hidden="true">✉️</span>
-              <h2 class="contact-card-title" id="contact-coach-name">Mr. Ryan Broome</h2>
-              <p class="contact-card-role" id="contact-coach-title">Coach &amp; Faculty Sponsor</p>
+              <h2 class="contact-card-title" id="contact-coach-name">Coach Broome</h2>
+              <p class="contact-card-role" id="contact-coach-role">Varsity Coach and Club Sponsor</p>
+              <p class="contact-card-bio">
+                Established the PHS Esports program as a competitor in the Montgomery County Esports League (MCEL) in the Fall of 2024. He has taken the varsity team to the semifinals in all four seasons of the program&apos;s history and twice made the finals.
+              </p>
               <a class="contact-card-link" id="contact-coach-email" href="mailto:Ryan_J_Broome@mcpsmd.org">Ryan_J_Broome@mcpsmd.org</a>
             </article>
             <article class="contact-card">
               <span class="contact-card-icon" aria-hidden="true">📋</span>
-              <h2 class="contact-card-title" id="contact-manager-name">Varsity Team Manager</h2>
-              <p class="contact-card-role">Team operations &amp; scheduling</p>
+              <h2 class="contact-card-title" id="contact-manager-name">Dan Choulas</h2>
+              <p class="contact-card-role" id="contact-manager-role">Manager</p>
+              <p class="contact-card-bio">
+                Dan joins the program as the manager of both the varsity team and club. He brings a wealth of experience and technical knowledge in both tournament play and managing cross-platform communication hubs such as Discord.
+              </p>
               <a class="contact-card-link" id="contact-manager-email" href="mailto:falconesports.phs@gmail.com">falconesports.phs@gmail.com</a>
             </article>
             <article class="contact-card">
@@ -766,16 +762,12 @@
       <h2 id="player-modal-title" class="add-clip-dialog-title">Add player</h2>
       <form id="player-form" class="player-form">
         <label class="login-field player-form-field">
-          <span>Photo URL</span>
-          <input type="url" id="player-photo-url" name="photoUrl" placeholder="https://…" />
-        </label>
-        <label class="login-field player-form-field">
           <span>Gamertag</span>
           <input type="text" id="player-name" name="name" placeholder="In-game name" required />
         </label>
         <label class="login-field player-form-field">
-          <span>Real name</span>
-          <input type="text" id="player-real-name" name="realName" placeholder="First name or full name" />
+          <span>Rank</span>
+          <input type="text" id="player-real-name" name="realName" placeholder="e.g. Grand Champion II" />
         </label>
         <label class="login-field player-form-field">
           <span>Short bio</span>

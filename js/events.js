@@ -53,7 +53,7 @@ function renderEventDetail(event) {
   if (!panel || !event) return;
 
   const banner = event.bannerUrl
-    ? `<div class="event-detail-banner"><img src="${escapeHtml(event.bannerUrl)}" alt="" /></div>`
+    ? `<div class="event-detail-banner"><img src="${escapeHtml(event.bannerUrl)}" alt="" width="1200" height="160" /></div>`
     : `<div class="event-detail-banner event-detail-banner--empty" aria-hidden="true"></div>`;
 
   const infoGrids = (event.blocks ?? []).filter((b) => b.type === "infoGrid");
@@ -102,7 +102,7 @@ function renderEventsList() {
     <article class="event-card">
       ${
         event.bannerUrl
-          ? `<div class="event-card-banner event-card-banner--photo"><img src="${escapeHtml(event.bannerUrl)}" alt="" loading="lazy" /></div>`
+          ? `<div class="event-card-banner event-card-banner--photo"><img src="${escapeHtml(event.bannerUrl)}" alt="" width="1200" height="160" loading="lazy" /></div>`
           : `<div class="event-card-banner event-card-banner--empty" aria-hidden="true"></div>`
       }
       <div class="event-card-body">

@@ -16,10 +16,10 @@ window.PHS_SITE_CONFIG = window.PHS_SITE_CONFIG || {
     email: "mailto:Ryan_J_Broome@mcpsmd.org",
   },
   contacts: {
-    coachName: "Mr. Ryan Broome",
-    coachTitle: "Coach & Faculty Sponsor",
+    coachName: "Coach Broome",
     coachEmail: "Ryan_J_Broome@mcpsmd.org",
-    teamManagerName: "Varsity Team Manager",
+    teamManagerName: "Dan Choulas",
+    teamManagerRole: "Manager",
     teamManagerEmail: "falconesports.phs@gmail.com",
     discordLabel: "PHS Esports Discord",
   },

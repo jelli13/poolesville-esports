@@ -30,8 +30,8 @@ function wireContactLinks() {
   setHref("contact-page-discord", links.discord);
 
   setText("contact-coach-name", contacts.coachName);
-  setText("contact-coach-title", contacts.coachTitle);
   setText("contact-manager-name", contacts.teamManagerName);
+  setText("contact-manager-role", contacts.teamManagerRole);
   setText("contact-discord-label", contacts.discordLabel);
 
   if (contacts.coachEmail) {

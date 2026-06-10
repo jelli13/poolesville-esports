@@ -112,9 +112,8 @@ function openPlayerModal(index) {
   if (!modal || !form) return;
 
   editingIndex = index;
-  const player = index != null ? players[index] : { name: "", realName: "", bio: "", photoUrl: "" };
+  const player = index != null ? players[index] : { name: "", realName: "", bio: "" };
 
-  form.querySelector("#player-photo-url").value = player.photoUrl ?? "";
   form.querySelector("#player-name").value = player.name ?? "";
   form.querySelector("#player-real-name").value = player.realName ?? "";
   form.querySelector("#player-bio").value = player.bio ?? "";
@@ -144,12 +143,13 @@ function wirePlayerModal() {
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+    const existing = editingIndex != null ? players[editingIndex] : null;
     const entry = {
-      id: editingIndex != null ? players[editingIndex]?.id ?? playerId() : playerId(),
+      id: existing?.id ?? playerId(),
       name: form.querySelector("#player-name").value.trim(),
       realName: form.querySelector("#player-real-name").value.trim(),
       bio: form.querySelector("#player-bio").value.trim(),
-      photoUrl: form.querySelector("#player-photo-url").value.trim(),
+      photoUrl: existing?.photoUrl ?? "",
     };
 
     if (!entry.name) {
