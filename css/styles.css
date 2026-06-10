@@ -1262,6 +1262,34 @@ body.nav-open .site-header {
 }
 
 /* Varsity players roster */
+.team-banner {
+  margin: 0 0 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--black-elevated);
+}
+
+.team-banner img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: none;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.team-banner-caption {
+  padding: 0.75rem 1rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
 .players-header {
   display: flex;
   flex-wrap: wrap;
@@ -1431,11 +1459,13 @@ body.nav-open .site-header {
 
 .about-photo {
   width: 100%;
-  border-radius: 12px;
-  border: 2px solid var(--border);
+  min-height: 280px;
+  height: 280px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
   display: block;
-  aspect-ratio: 4 / 3;
   object-fit: cover;
+  box-sizing: border-box;
 }
 
 .about-badge {
@@ -2308,6 +2338,15 @@ body.nav-open .site-header {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
+}
+
+.photo-strip img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  display: block;
 }
 
 /* —— Redesign: schedule —— */

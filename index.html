@@ -9,6 +9,21 @@
   />
   <meta name="author" content="Poolesville High School — Falcon Esports" />
   <meta name="robots" content="index, follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Falcon Esports — Poolesville High School" />
+  <meta property="og:title" content="Poolesville High School Falcon Esports" />
+  <meta
+    property="og:description"
+    content="Poolesville High School (MCPS) varsity esports team — schedules, roster, MCEL league info, and club events. Official school athletics program."
+  />
+  <meta property="og:url" content="https://jelli13.github.io/poolesville-esports/" />
+  <meta property="og:image" content="https://jelli13.github.io/poolesville-esports/assets/logo.svg" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Poolesville High School Falcon Esports" />
+  <meta
+    name="twitter:description"
+    content="Varsity Rocket League in MCEL — schedules, highlights, roster, and how to join Falcon Esports at Poolesville High School."
+  />
   <title>Poolesville High School Falcon Esports</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,12 +31,9 @@
     href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="css/styles.css?v=46" />
+  <link rel="stylesheet" href="css/styles.css?v=55" />
   <link rel="stylesheet" href="css/admin.css?v=9" />
-  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1280&q=70" />
-  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1280&q=70" />
-  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1280&q=70" />
-  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=1280&q=70" />
+  <link rel="preload" as="image" href="assets/team/mcel-tournament-wide.jpg" />
 </head>
 <body>
   <div class="site-top">
@@ -107,38 +119,29 @@
             <div class="hero-carousel-track" id="hero-carousel-track">
               <div class="hero-carousel-slide">
                 <img
-                  src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1280&q=70"
-                  alt=""
+                  src="assets/team/mcel-tournament-wide.jpg"
+                  alt="MCPS Esports League tournament with Falcon Esports players competing in Rocket League"
                   width="1920"
-                  height="1080"
+                  height="1081"
                   fetchpriority="high"
                   loading="eager"
                 />
               </div>
               <div class="hero-carousel-slide">
                 <img
-                  src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1280&q=70"
-                  alt=""
+                  src="assets/team/mcel-competition-action.jpg"
+                  alt="Students competing at the Montgomery County Esports League tournament"
                   width="1920"
-                  height="1080"
+                  height="1081"
                   loading="eager"
                 />
               </div>
               <div class="hero-carousel-slide">
                 <img
-                  src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1280&q=70"
-                  alt=""
+                  src="assets/team/mcel-trophy-hero.jpg?v=6"
+                  alt="Montgomery County Esports League Rocket League championship trophy"
                   width="1920"
-                  height="1080"
-                  loading="eager"
-                />
-              </div>
-              <div class="hero-carousel-slide">
-                <img
-                  src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=1280&q=70"
-                  alt=""
-                  width="1920"
-                  height="1080"
+                  height="1081"
                   loading="eager"
                 />
               </div>
@@ -359,6 +362,16 @@
           </div>
         </header>
         <div class="page-content">
+          <figure class="team-banner" aria-label="Falcon Esports at MCEL">
+            <img
+              src="assets/team/mcel-players-at-finals.jpg"
+              alt="Falcon Esports players at the MCEL Rocket League finals with the league championship trophy"
+              width="1920"
+              height="1081"
+              loading="lazy"
+            />
+            <figcaption class="team-banner-caption">League champions — Montgomery County Esports League</figcaption>
+          </figure>
           <div class="players-header">
             <button type="button" id="btn-edit-players" class="btn-admin admin-only" hidden>Edit players</button>
           </div>
@@ -503,9 +516,14 @@
               </div>
 
               <div class="about-visual">
-                <div class="img-placeholder img-placeholder--about-photo">
-                  <span>Esports photo coming soon</span>
-                </div>
+                <img
+                  class="about-photo"
+                  src="assets/team/mcel-about-tournament.jpg"
+                  alt="Students competing in Rocket League at the Montgomery County Esports League tournament"
+                  width="800"
+                  height="280"
+                  loading="lazy"
+                />
               </div>
             </div>
 
@@ -581,25 +599,25 @@
             <div class="rocket-league-showcase" aria-label="Rocket League in action">
               <figure class="rocket-league-showcase-main">
                 <img
-                  src="assets/rocket-league/dreamhack-montreal-2018.jpg"
-                  alt="Rocket League competition at DreamHack Montreal 2018"
+                  src="assets/rocket-league/mcel-competition-main.jpg"
+                  alt="Students competing in Rocket League at the Montgomery County Esports League tournament"
                   width="1280"
                   height="853"
                   loading="eager"
                   fetchpriority="high"
                 />
-                <figcaption class="rocket-league-showcase-caption">Rocket League at DreamHack Montreal — high-speed competitive play.</figcaption>
+                <figcaption class="rocket-league-showcase-caption">MCEL Rocket League tournament — competitive play in Montgomery County.</figcaption>
               </figure>
               <div class="rocket-league-showcase-side">
                 <figure class="rocket-league-showcase-thumb">
                   <img
-                    src="assets/rocket-league/rlcs-season-6.jpg"
-                    alt="RLCS Season 6 championship match on stage"
+                    src="assets/rocket-league/rl-gdc-2016.jpg"
+                    alt="Rocket League showcased at the Game Developers Conference 2016"
                     width="960"
-                    height="1381"
+                    height="640"
                     loading="lazy"
                   />
-                  <figcaption class="rocket-league-showcase-thumb-caption">RLCS Season 6 finals</figcaption>
+                  <figcaption class="rocket-league-showcase-thumb-caption">Rocket League at GDC 2016</figcaption>
                 </figure>
                 <figure class="rocket-league-showcase-thumb">
                   <img
