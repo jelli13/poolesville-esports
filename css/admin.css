@@ -57,6 +57,13 @@
   border: 2px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+.login-logo {
+  width: 120px;
+  height: auto;
+  margin: 0 auto 1.25rem;
 }
 
 .login-card h1 {
@@ -67,6 +74,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 0.5rem;
+  text-align: center;
 }
 
 .login-lead {
@@ -75,9 +83,11 @@
   font-size: 0.95rem;
   margin-bottom: 1.5rem;
   line-height: 1.6;
+  text-align: center;
 }
 
 .login-form {
+  text-align: left;
   display: flex;
   flex-direction: column;
   gap: 1rem;

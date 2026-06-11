@@ -143,11 +143,18 @@ body.nav-open .site-header {
   border-radius: 6px;
 }
 
-.header-logo {
+.brand-logo {
   display: block;
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  object-fit: contain;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.header-logo {
+  height: 44px;
+  width: auto;
 }
 
 .header-brand-text {
@@ -1602,9 +1609,9 @@ body.nav-open .site-header {
   gap: 0.75rem;
 }
 
-.footer-brand img {
-  width: 32px;
-  height: 32px;
+.footer-logo {
+  width: 56px;
+  height: 56px;
 }
 
 .footer-name {
@@ -2815,12 +2822,29 @@ body.nav-open .site-header {
 /* —— v2 redesign: page headers —— */
 .page-header {
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
   background: var(--black-elevated);
   border-bottom: 1px solid var(--border);
   padding: 2rem 0 1.85rem;
 }
 
+.page-header::after {
+  content: "";
+  position: absolute;
+  right: clamp(1rem, 5vw, 4rem);
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(72px, 11vw, 128px);
+  height: clamp(72px, 11vw, 128px);
+  background: var(--logo-url) center / contain no-repeat;
+  opacity: 0.07;
+  pointer-events: none;
+}
+
 .page-header-inner {
+  position: relative;
+  z-index: 1;
   max-width: none;
   width: 100%;
   margin: 0;
@@ -2882,10 +2906,9 @@ body.nav-open .site-header {
 }
 
 .hero-logo {
-  display: block;
-  width: 140px;
+  width: clamp(140px, 26vw, 220px);
   height: auto;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .hero-title {
@@ -3525,10 +3548,6 @@ body.nav-open .site-header {
   border-radius: 0;
 }
 
-.header-logo {
-  height: 48px;
-  width: auto;
-}
 
 /* —— v2: nav dropdown —— */
 @media (min-width: 901px) {
@@ -3608,7 +3627,6 @@ body.nav-open .site-header {
     rgba(10, 10, 10, 0.55) 45%,
     rgba(10, 10, 10, 0.75) 100%
   );
-  pointer-events: none;
 }
 
 #page-home .hero-content {
