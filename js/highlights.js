@@ -272,6 +272,18 @@ export async function addHighlight(clip) {
   await saveHighlights(highlightsData);
 }
 
+export function getHighlight(id) {
+  return highlightsData.find((h) => h.id === id) ?? null;
+}
+
+export async function updateHighlight(clip) {
+  await ensureHighlightsLoaded();
+  const index = highlightsData.findIndex((h) => h.id === clip.id);
+  if (index === -1) throw new Error("Clip not found");
+  highlightsData[index] = clip;
+  await saveHighlights(highlightsData);
+}
+
 function renderGallery(gallery, emptyEl, query) {
   if (!gallery) return;
 
@@ -288,8 +300,13 @@ function renderGallery(gallery, emptyEl, query) {
         ? `<button type="button" class="highlight-delete" data-delete-id="${escapeHtml(item.id)}" aria-label="Delete clip">🗑</button>`
         : "";
 
+      const editBtn = admin
+        ? `<button type="button" class="highlight-edit" data-edit-id="${escapeHtml(item.id)}" aria-label="Edit clip">✎</button>`
+        : "";
+
       return `
         <article class="highlight-card" data-id="${escapeHtml(item.id)}">
+          ${editBtn}
           ${deleteBtn}
           ${media}
           <div class="highlight-card-body">
@@ -306,6 +323,16 @@ function renderGallery(gallery, emptyEl, query) {
       await deleteHighlight(btn.dataset.deleteId);
       clearHighlightFilters();
       await reloadHighlights();
+    });
+  });
+
+  gallery.querySelectorAll(".highlight-edit").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      if (!isAdminLoggedIn()) return;
+      const clip = highlightsData.find((h) => h.id === btn.dataset.editId);
+      if (!clip) return;
+      const { openEditClipModal } = await import("./admin-ui.js");
+      openEditClipModal(clip);
     });
   });
 

@@ -29,6 +29,7 @@ const navGroupEvents = document.getElementById("nav-group-events");
 const mobileNavQuery = window.matchMedia("(max-width: 900px)");
 
 let highlightsReady = false;
+let qualificationsReady = false;
 let scheduleReady = false;
 let playersReady = false;
 let hallOfFameReady = false;
@@ -163,7 +164,7 @@ async function showVarsityTab(tabId) {
   }
 
   if (tabId === "highlights" && !highlightsReady) {
-    const { initHighlights } = await import("./highlights.js?v=3");
+    const { initHighlights } = await import("./highlights.js");
     await initHighlights();
     highlightsReady = true;
   }
@@ -176,8 +177,14 @@ async function showVarsityTab(tabId) {
 
   if (tabId === "hall-of-fame" && !hallOfFameReady) {
     hallOfFameReady = true;
-    const { initHallOfFame } = await import("./hall-of-fame.js");
+    const { initHallOfFame } = await import("./hall-of-fame.js?v=2");
     initHallOfFame();
+  }
+
+  if (tabId === "qualifications" && !qualificationsReady) {
+    qualificationsReady = true;
+    const { initQualifications } = await import("./qualifications.js?v=1");
+    initQualifications();
   }
 }
 

@@ -18,6 +18,11 @@ export function toEmbedUrl(url) {
   return id ? `https://www.youtube.com/embed/${id}` : null;
 }
 
+export function toWatchUrl(url) {
+  const id = parseYoutubeId(url);
+  return id ? `https://www.youtube.com/watch?v=${id}` : "";
+}
+
 export async function fetchYoutubeTitle(pageUrl) {
   const embed = toEmbedUrl(pageUrl);
   if (!embed) return null;

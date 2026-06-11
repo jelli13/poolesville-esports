@@ -1,12 +1,23 @@
 {
+  "intro": "Former varsity players who helped build Falcon Esports.",
   "years": [
     {
       "year": "2025",
-      "members": ["BlaKKat", "Shatterlol", "FalconAce", "NovaStrike", "PixelPilot"]
+      "members": [
+        "BlaKKat",
+        "Shatterlol",
+        "FalconAce",
+        "NovaStrike",
+        "PixelPilot"
+      ]
     },
     {
       "year": "2024",
-      "members": ["RocketRaven", "TurboTitan", "MidnightMVP"]
+      "members": [
+        "RocketRaven",
+        "TurboTitan",
+        "MidnightMVP"
+      ]
     }
   ]
 }

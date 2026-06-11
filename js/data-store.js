@@ -215,3 +215,15 @@ export async function saveEvents(items) {
 export async function loadHallOfFame() {
   return fetchPublicJson("/api/hall-of-fame", "data/hall-of-fame.json");
 }
+
+export async function saveHallOfFame(data) {
+  await postAdminJson("/api/hall-of-fame", data);
+}
+
+export async function loadQualifications() {
+  return fetchPublicJson("/api/qualifications", "data/qualifications.json");
+}
+
+export async function saveQualifications(data) {
+  await postAdminJson("/api/qualifications", data);
+}

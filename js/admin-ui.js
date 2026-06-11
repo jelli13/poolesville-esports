@@ -1,13 +1,15 @@
 import { isAdminLoggedIn } from "./admin-auth.js";
 import { syncAdminControls } from "./admin-controls.js";
-import { toEmbedUrl, fetchYoutubeTitle } from "./youtube.js";
+import { toEmbedUrl, toWatchUrl, fetchYoutubeTitle } from "./youtube.js";
 import {
   addHighlight,
   clearHighlightFilters,
   reloadHighlights,
+  updateHighlight,
 } from "./highlights.js";
 
 let addClipDialogWired = false;
+let editingClipId = null;
 const previewTitleCache = new Map();
 let previewDebounce = null;
 
@@ -63,11 +65,45 @@ async function updatePreviewFromForm() {
   renderClipPreview({ title, embedUrl, playerNumber, gameNumber, opponent });
 }
 
+function resetClipModalState() {
+  editingClipId = null;
+  document.getElementById("add-clip-title").textContent = "Add clip";
+  document.getElementById("btn-submit-clip").textContent = "Add clip";
+}
+
 function openAddClipModal() {
   const modal = document.getElementById("add-clip-modal");
   if (!modal) return;
   modal.hidden = false;
   modal.setAttribute("aria-hidden", "false");
+}
+
+function openEditClipModal(clip) {
+  if (!clip) return;
+
+  editingClipId = clip.id;
+  document.getElementById("add-clip-title").textContent = "Edit clip";
+  document.getElementById("btn-submit-clip").textContent = "Save changes";
+
+  const watchUrl = toWatchUrl(clip.embedUrl) || clip.embedUrl || "";
+  document.getElementById("clip-url").value = watchUrl;
+  document.getElementById("clip-game").value = clip.gameNumber ?? "";
+  document.getElementById("clip-player").value = clip.playerNumber ?? "";
+  document.getElementById("clip-opponent").value = clip.opponent ?? "";
+
+  if (clip.title && watchUrl) {
+    previewTitleCache.set(watchUrl, clip.title);
+  }
+
+  renderClipPreview({
+    title: clip.title,
+    embedUrl: clip.embedUrl,
+    playerNumber: clip.playerNumber,
+    gameNumber: clip.gameNumber,
+    opponent: clip.opponent,
+  });
+
+  openAddClipModal();
 }
 
 function closeAddClipModal() {
@@ -78,6 +114,7 @@ function closeAddClipModal() {
   modal.setAttribute("aria-hidden", "true");
   form?.reset();
   previewTitleCache.clear();
+  resetClipModalState();
   renderClipPreview({});
 }
 
@@ -93,6 +130,7 @@ function wireAddClipDialog() {
 
   openBtn?.addEventListener("click", () => {
     if (!isAdminLoggedIn()) return;
+    resetClipModalState();
     form?.reset();
     previewTitleCache.clear();
     renderClipPreview({});
@@ -138,7 +176,7 @@ function wireAddClipDialog() {
       if (!title) title = "Untitled highlight";
 
       const clip = {
-        id: `clip-${Date.now()}`,
+        id: editingClipId ?? `clip-${Date.now()}`,
         title,
         keywords: `${title} ${playerNumber} ${gameNumber} ${opponent}`.toLowerCase(),
         playerNumber,
@@ -147,7 +185,12 @@ function wireAddClipDialog() {
         embedUrl,
       };
 
-      await addHighlight(clip);
+      if (editingClipId) {
+        await updateHighlight(clip);
+      } else {
+        await addHighlight(clip);
+      }
+
       clearHighlightFilters();
       await reloadHighlights();
       closeAddClipModal();
@@ -167,3 +210,5 @@ export function initAdminUi() {
   wireAddClipDialog();
   syncAdminControls();
 }
+
+export { openEditClipModal };

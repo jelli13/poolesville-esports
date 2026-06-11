@@ -31,8 +31,8 @@
     href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="css/styles.css?v=60" />
-  <link rel="stylesheet" href="css/admin.css?v=9" />
+  <link rel="stylesheet" href="css/styles.css?v=61" />
+  <link rel="stylesheet" href="css/admin.css?v=10" />
   <link rel="preload" as="image" href="assets/team/mcel-tournament-wide.jpg" />
 </head>
 <body>
@@ -381,7 +381,9 @@
           </div>
         </header>
         <div class="page-content">
-          <p class="hof-intro">Former varsity players who helped build Falcon Esports.</p>
+          <div class="hof-header">
+            <button type="button" id="btn-edit-hof" class="btn-admin admin-only" hidden>Edit content</button>
+          </div>
           <div id="hall-of-fame-content" class="hall-of-fame-content" aria-label="Alumni by year"></div>
         </div>
       </div>
@@ -394,28 +396,10 @@
           </div>
         </header>
         <div class="page-content">
-          <section id="qualifications-block" class="qualifications-block">
-            <h2 class="qualifications-heading">Varsity Requirements</h2>
-            <p class="qualifications-intro">
-              Varsity (5 players max): You must meet all the same qualifications as athletics:
-            </p>
-            <ul class="qualifications-list">
-              <li><span class="qual-check" aria-hidden="true">✓</span> No major discipline issues</li>
-              <li><span class="qual-check" aria-hidden="true">✓</span> Practices are mandatory to play (unless advance notice is given)</li>
-              <li><span class="qual-check" aria-hidden="true">✓</span> You cannot have an unexcused absence the day of a game</li>
-              <li><span class="qual-check" aria-hidden="true">✓</span> You must be ranked at least Platinum I by the end of Week 2 of competition (negotiable if making significant progress)</li>
-              <li><span class="qual-check" aria-hidden="true">✓</span> Jerseys required for Captain, Assistant Captain, and Anchor (optional for subs and JV)</li>
-            </ul>
-            <div class="qualifications-cta">
-              <p class="qualifications-cta-text">Ready to try out?</p>
-              <a
-                class="btn btn-primary"
-                href="https://docs.google.com/forms/d/e/1FAIpQLSc0jjVdnKvH2-rG9U5RFWdStTonzbW7cramWzIyfkWg0aglSw/viewform"
-                target="_blank"
-                rel="noopener noreferrer"
-              >Apply Now →</a>
-            </div>
-          </section>
+          <div class="qualifications-header">
+            <button type="button" id="btn-edit-qualifications" class="btn-admin admin-only" hidden>Edit content</button>
+          </div>
+          <section id="qualifications-block" class="qualifications-block" aria-live="polite"></section>
         </div>
       </div>
     </div>
@@ -816,6 +800,6 @@
   </div>
 
   <script src="js/site-config.js"></script>
-  <script src="js/app.js?v=29" type="module"></script>
+  <script src="js/app.js?v=30" type="module"></script>
 </body>
 </html>

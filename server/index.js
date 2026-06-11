@@ -196,6 +196,54 @@ app.post("/api/events", requireAdmin, async (req, res) => {
   }
 });
 
+app.get("/api/hall-of-fame", async (_req, res) => {
+  try {
+    const data = await readJsonFile("hall-of-fame.json");
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not read Hall of Fame" });
+  }
+});
+
+app.post("/api/hall-of-fame", requireAdmin, async (req, res) => {
+  try {
+    const data = req.body?.data ?? req.body;
+    if (!data || !Array.isArray(data.years)) {
+      return res.status(400).json({ error: "Hall of Fame must be { intro, years: [] }" });
+    }
+    await writeJsonFile("hall-of-fame.json", data);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not save Hall of Fame" });
+  }
+});
+
+app.get("/api/qualifications", async (_req, res) => {
+  try {
+    const data = await readJsonFile("qualifications.json");
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not read qualifications" });
+  }
+});
+
+app.post("/api/qualifications", requireAdmin, async (req, res) => {
+  try {
+    const data = req.body?.data ?? req.body;
+    if (!data || typeof data !== "object" || !Array.isArray(data.items)) {
+      return res.status(400).json({ error: "Qualifications must include an items array" });
+    }
+    await writeJsonFile("qualifications.json", data);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not save qualifications" });
+  }
+});
+
 app.get("/health", (_req, res) => {
   res.type("text/plain").send("ok");
 });
