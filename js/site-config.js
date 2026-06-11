@@ -9,7 +9,7 @@ window.PHS_SITE_CONFIG = window.PHS_SITE_CONFIG || {
   tournamentSignupUrl: "https://new.express.adobe.com/webpage/LBAd74oUlTuPM",
   livestreamUrl: "https://www.youtube.com/live/VkENsnHv9G8",
   links: {
-    discord: "https://discord.gg/",
+    discord: "https://discord.gg/X4dY9fNdg",
     youtube: "https://www.youtube.com/@FalconEsportsLetsGo/videos",
     instagram: "",
     phs: "https://www.montgomeryschoolsmd.org/schools/poolesvillehs/",
