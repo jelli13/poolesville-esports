@@ -171,7 +171,7 @@ async function showVarsityTab(tabId) {
 
   if (tabId === "players" && !playersReady) {
     playersReady = true;
-    const { initPlayers } = await import("./players.js?v=4");
+    const { initPlayers } = await import("./players.js?v=6");
     initPlayers();
   }
 

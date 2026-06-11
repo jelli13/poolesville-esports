@@ -11,15 +11,20 @@ function playerId() {
   return `p-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function playerAvatarMarkup() {
+  return `<div class="player-avatar" aria-hidden="true">
+    <svg class="player-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+    </svg>
+  </div>`;
+}
+
 function renderPlayerCard(player, index) {
   const gamertag = escapeHtml(player.name || "Player");
   const realName = escapeHtml(player.realName || "");
   const bio = escapeHtml(player.bio || "");
-  const photoUrl = player.photoUrl?.trim();
-
-  const avatar = photoUrl
-    ? `<img class="player-photo" src="${escapeHtml(photoUrl)}" alt="" loading="lazy" />`
-    : `<div class="player-photo player-photo--placeholder" aria-hidden="true"><span>${gamertag.charAt(0)}</span></div>`;
+  const avatar = playerAvatarMarkup();
 
   const nameBlock = `
     <p class="player-name">${gamertag}</p>
@@ -149,7 +154,6 @@ function wirePlayerModal() {
       name: form.querySelector("#player-name").value.trim(),
       realName: form.querySelector("#player-real-name").value.trim(),
       bio: form.querySelector("#player-bio").value.trim(),
-      photoUrl: existing?.photoUrl ?? "",
     };
 
     if (!entry.name) {
