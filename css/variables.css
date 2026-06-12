@@ -16,7 +16,7 @@
   --topbar-height: var(--header-height);
   --section-max: 68.75rem;
   --circuit-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23ffd700' stroke-opacity='0.06' stroke-width='1'%3E%3Cpath d='M0 30h20M40 30h20M30 0v20M30 40v20'/%3E%3Ccircle cx='30' cy='30' r='3'/%3E%3C/g%3E%3C/svg%3E");
-  --logo-url: url("../assets/logo-esports.png?v=2");
+  --logo-url: url("../assets/logo-esports.png?v=4");
 
   /* Legacy aliases used throughout styles.css */
   --navy: var(--black);
